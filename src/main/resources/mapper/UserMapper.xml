@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.doccure.dao.UserDao">
+    <insert id="registerUser" parameterType="com.example.doccure.entity.User">
+        insert into user(username, email, password, role)
+        values (#{username},#{email},#{password},#{role})
+    </insert>
+    <select id="getAllPatientByRole" parameterType="int" resultType="com.example.doccure.entity.User">
+        select * from user where role=#{role}
+    </select>
+    <select id="getAllDoctorByRole" parameterType="int" resultType="com.example.doccure.entity.User">
+        select * from user where role=#{role}
+    </select>
+    <select id="getUserByE" parameterType="String" resultType="com.example.doccure.entity.User">
+        select * from user where email=#{email}
+    </select>
+    <select id="getUserByP" parameterType="String" resultType="com.example.doccure.entity.User">
+        select * from user where password=#{password}
+    </select>
+    <select id="getUserByEmail_Password" parameterType="String" resultType="com.example.doccure.entity.User">
+        select * from user where email=#{email} and password=#{password}
+    </select>
+    <update id="updatePassword" parameterType="String">
+        update user
+        <set>
+            <if test="new_password!=null">password=#{new_password},</if>
+        </set>
+        where email=#{email} and password=#{old_password}
+    </update>
+    <update id="updateEmail" parameterType="String">
+        update user
+        <set>
+            <if test="new_email!=null">email=#{new_email},</if>
+        </set>
+        where email=#{old_email} and password=#{password}
+    </update>
+    <update id="updateUsername" parameterType="String">
+        update user
+        <set>
+            <if test="new_username!=null">username=#{new_username},</if>
+        </set>
+        where email=#{email} and password=#{password}
+    </update>
+
+    <delete id="deleteUser" parameterType="String">
+        delete
+        from user
+        where email=#{email};
+    </delete>
+
+<!--    医生病人关系-->
+    <select id="getDoctorPatientByDP_E" parameterType="String" resultType="com.example.doccure.entity.DoctorPatient">
+        select * from doctor_patients where doctor_email=#{doctor_email} and patient_email=#{patient_email}
+    </select>
+    <select id="getAllPatientByD_E" parameterType="String" resultType="com.example.doccure.entity.DoctorPatient">
+        select * from doctor_patients where doctor_email=#{doctor_email}
+    </select>
+    <select id="getAllDoctorByP_E" parameterType="String" resultType="com.example.doccure.entity.DoctorPatient">
+        select * from doctor_patients where patient_email=#{patient_email}
+    </select>
+    <insert id="insertDE" parameterType="com.example.doccure.entity.DoctorPatient">
+        insert into doctor_patients(doctor_email, patient_email)
+        values (#{doctor_email},#{patient_email})
+    </insert>
+    <delete id="deleteByDP_E" parameterType="String">
+        delete from doctor_patients where doctor_email=#{doctor_email} and patient_email=#{patient_email}
+    </delete>
+
+<!--    医生申请-->
+    <insert id="insertApply" parameterType="com.example.doccure.entity.DoctorApply">
+        insert into doctor_apply (username, doctor_email, doctor_password, time, image_url, file_url, specialty, status, result,is_new)
+        values (#{username},#{doctor_email},#{doctor_password},#{time},#{image_url}
+                ,#{file_url},#{specialty},#{status},#{result},#{is_new});
+    </insert>
+
+    <insert id="deleteApplyFail" parameterType="int">
+        delete from doctor_apply where id=#{id}
+    </insert>
+
+    <select id="getDoctorApplyByStatus" parameterType="int" resultType="com.example.doccure.entity.DoctorApply">
+        select * from doctor_apply where status=#{status}
+    </select>
+
+    <select id="getDoctorApplyById" parameterType="int" resultType="com.example.doccure.entity.DoctorApply">
+        select * from doctor_apply where id=#{id}
+    </select>
+
+    <update id="updateApplyResultById" parameterType="String">
+        update doctor_apply
+        <set>
+            <if test="result!=null">result=#{result}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="updateApplyStatusById" parameterType="int">
+        update doctor_apply
+        <set>
+            <if test="status!=null">status=#{status}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="updateApplyIsNewById">
+        update doctor_apply
+        <set>
+            is_new=0
+        </set>
+        where doctor_email=#{doctor_email} and is_new=1
+    </update>
+
+    <select id="getDoctorApplyByDE_Status" resultType="com.example.doccure.entity.DoctorApply">
+        select * from doctor_apply where doctor_email=#{doctor_email} and status=#{status} and is_new=#{is_new}
+    </select>
+
+    <select id="getDoctorApplyByDEP_Status" resultType="com.example.doccure.entity.DoctorApply">
+        select * from doctor_apply where doctor_email=#{doctor_email} and status=#{status} and doctor_password=#{doctor_password} and is_new=#{is_new}
+    </select>
+</mapper>

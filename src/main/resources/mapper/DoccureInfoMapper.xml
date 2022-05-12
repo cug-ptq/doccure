@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.doccure.dao.DoccureInfoDao">
+    <insert id="insertSpecialityInfo" parameterType="com.example.doccure.entity.info.SpecialityInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into speciality_info(speciality,image_url)
+        values (#{speciality},#{image_url})
+    </insert>
+    <select id="getAllSpecialityInfo" resultType="com.example.doccure.entity.info.SpecialityInfo">
+        select * from speciality_info
+    </select>
+
+    <select id="getSpecialityInfoById" resultType="com.example.doccure.entity.info.SpecialityInfo">
+        select * from speciality_info where id=#{id}
+    </select>
+
+    <delete id="deleteSpeciality" parameterType="int">
+        delete
+        from speciality_info
+        where id=#{id};
+    </delete>
+
+    <update id="updateSpecialityInfo" parameterType="com.example.doccure.entity.info.SpecialityInfo">
+        update speciality_info
+        <set>
+            <if test="specialityInfo.speciality!=null">speciality=#{specialityInfo.speciality},</if>
+            <if test="specialityInfo.image_url!=null">image_url=#{specialityInfo.image_url}</if>
+        </set>
+        where id=#{specialityInfo.id}
+    </update>
+</mapper>

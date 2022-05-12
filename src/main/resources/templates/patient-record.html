@@ -1,0 +1,781 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<title>Doccure</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+	<!-- Favicons -->
+	<link th:href="@{/img/favicon.png}" rel="icon">
+	<link rel="stylesheet" th:href="@{/css/notiflix-1.3.0.min.css}">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+	<!-- Fontawesome CSS -->
+	<link rel="stylesheet" th:href="@{/plugins/fontawesome/css/fontawesome.min.css}">
+	<link rel="stylesheet" th:href="@{/plugins/fontawesome/css/all.min.css}">
+
+	<link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
+
+	<!-- Main CSS -->
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+
+	<script th:src="@{/js/html5shiv.min.js}"></script>
+	<script th:src="@{/js/respond.min.js}"></script>
+
+
+</head>
+<body>
+<!-- Main Wrapper -->
+<div class="main-wrapper">
+
+	<!-- Header -->
+	<header class="header">
+		<nav class="navbar navbar-expand-lg header-nav">
+			<div class="navbar-header">
+				<a id="mobile_btn" href="javascript:void(0);">
+							<span class="bar-icon">
+								<span></span>
+								<span></span>
+								<span></span>
+							</span>
+				</a>
+				<a th:href="@{/index}" class="navbar-brand logo">
+					<img th:src="@{/img/logo.png}" class="img-fluid" alt="Logo">
+				</a>
+			</div>
+			<div class="main-menu-wrapper">
+				<div class="menu-header">
+					<a th:href="@{/index}" class="menu-logo">
+						<img th:src="@{/img/logo.png}" class="img-fluid" alt="Logo">
+					</a>
+					<a id="menu_close" class="menu-close" href="javascript:void(0);">
+						<i class="fas fa-times"></i>
+					</a>
+				</div>
+				<ul class="main-nav">
+					<li>
+						<a th:href="@{/index}">Home</a>
+					</li>
+					<li>
+						<a th:href="@{/doctors}">OurDoctors</a>
+					</li>
+					<li class="has-submenu active">
+						<a href="">Doctors <i class="fas fa-chevron-down"></i></a>
+						<ul class="submenu">
+							<li><a th:href="@{/doctor-dashboard}">Doctor Dashboard</a></li>
+							<li><a th:href="@{/appointments}">Appointments</a></li>
+							<li><a th:href="@{/schedule-timings}">Schedule Timing</a></li>
+							<li><a th:href="@{/my-patients}">Patients List</a></li>
+							<li><a th:href="@{/chat-doctor}">Chat</a></li>
+							<li><a th:href="@{/doctor-profile-settings}">Profile Settings</a></li>
+							<li><a th:href="@{/health-analysis}">Health Analysis</a></li>
+							<li><a th:href="@{/doctor-register}">Doctor Register</a></li>
+						</ul>
+					</li>
+					<li class="has-submenu">
+						<a href="">Patients <i class="fas fa-chevron-down"></i></a>
+						<ul class="submenu">
+							<li><a th:href="@{/booking-success}">Booking Success</a></li>
+							<li><a th:href="@{/patient-dashboard}">Patient Dashboard</a></li>
+							<li><a th:href="@{/myHealthRecord}">Health Record</a></li>
+							<li><a th:href="@{/myAssess}">Health Assess</a></li>
+							<li><a th:href="@{/chat}">Chat</a></li>
+							<li><a th:href="@{/profile-settings}">Profile Settings</a></li>
+							<li><a th:href="@{/change-password}">Change Password</a></li>
+						</ul>
+					</li>
+					<li>
+						<a th:href="@{/admin/login}" target="_blank">Admin</a>
+					</li>
+					<li class="login-link">
+						<a th:href="@{/login}">Login / Signup</a>
+					</li>
+				</ul>
+			</div>
+			<ul class="nav header-navbar-rht">
+				<li class="nav-item contact-item">
+					<div class="header-contact-img">
+						<i class="far fa-hospital"></i>
+					</div>
+					<div class="header-contact-detail">
+						<p class="contact-header">Contact</p>
+						<p class="contact-info-header"> +1 315 369 5943</p>
+					</div>
+				</li>
+
+				<!-- User Menu -->
+				<li class="nav-item dropdown has-arrow logged-item">
+					<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+								<span class="user-img">
+									<img class="rounded-circle" th:src="${doctorInfo.image_url}" width="31" th:alt="${user.username}">
+								</span>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right">
+						<div class="user-header">
+							<div class="avatar avatar-sm">
+								<img th:src="${doctorInfo.image_url}" th:alt="${user.username}" class="avatar-img rounded-circle">
+							</div>
+							<div class="user-text">
+								<h6 th:text="${user.username}"></h6>
+								<p class="text-muted mb-0" th:text="${user.getRoleName()}"></p>
+							</div>
+						</div>
+						<a class="dropdown-item" th:href="@{/doctor-dashboard}">Dashboard</a>
+						<a class="dropdown-item" th:href="@{/doctor-profile-settings}">Profile Settings</a>
+						<a class="dropdown-item" th:href="@{/logout}">Logout</a>
+					</div>
+				</li>
+				<!-- /User Menu -->
+
+			</ul>
+		</nav>
+	</header>
+	<!-- /Header -->
+
+	<!-- Breadcrumb -->
+	<div class="breadcrumb-bar">
+		<div class="container-fluid">
+			<div class="row align-items-center">
+				<div class="col-md-12 col-12">
+					<nav aria-label="breadcrumb" class="page-breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a th:href="@{/index}">Home</a></li>
+							<li class="breadcrumb-item active" aria-current="page">Profile-HealthRecord</li>
+						</ol>
+					</nav>
+					<h2 class="breadcrumb-title">Profile-HealthRecord</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /Breadcrumb -->
+
+	<!-- Page Content -->
+	<div class="content">
+		<div class="container-fluid">
+
+			<div class="row">
+				<!-- Profile Sidebar -->
+				<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+					<div class="profile-sidebar">
+						<div class="widget-profile pro-widget-content">
+							<div class="profile-info-widget">
+								<a href="#" class="booking-doc-img">
+									<img th:src="${patientInfo.image_url}" alt="User Image">
+								</a>
+								<div class="profile-det-info">
+									<h3 th:text="${patientInfo.username}"></h3>
+									<div class="patient-details">
+										<h5 th:text="${patientInfo.birth}"><i class="fas fa-birthday-cake"></i> </h5>
+										<h5 class="mb-0" th:text="${patientInfo.address}"><i class="fas fa-map-marker-alt"></i></h5>
+									</div>
+								</div>
+							</div>
+							<div class="patient-info">
+								<ul>
+									<li>Phone <span th:text="${patientInfo.telephone}"></span></li>
+									<li>Age <span th:text="${patientInfo.birth}"></span></li>
+								</ul>
+							</div>
+						</div>
+						<div class="dashboard-widget">
+							<nav class="dashboard-menu">
+								<ul>
+									<li class="active">
+										<a th:href="@{/patient-profile/health-record(email=${patientInfo.email})}">
+											<i class="fas fa-user-injured"></i>
+											<span>Health Record</span>
+										</a>
+									</li>
+									<li>
+										<a th:href="@{/patient-profile/health-assess(email=${patientInfo.email})}">
+											<i class="fas fa-user-injured"></i>
+											<span>Health Assessment</span>
+										</a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+
+					</div>
+				</div>
+				<!-- / Profile Sidebar -->
+
+				<div class="col-md-7 col-lg-8 col-xl-9 dct-appoinment">
+					<div class="card">
+						<div class="card-body pt-0">
+							<div class="user-tabs">
+								<ul class="nav nav-tabs nav-tabs-bottom nav-justified flex-wrap">
+									<li class="nav-item">
+										<a class="nav-link active" href="#basicInfo" data-toggle="tab">Basic Information</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#resume" data-toggle="tab"><span class="med-records">Health Resume</span></a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#exam" data-toggle="tab"><span class="med-records">Health Exam</span></a>
+									</li>
+								</ul>
+							</div>
+							<div class="tab-content">
+
+								<!-- BasicInfo Tab -->
+								<div id="basicInfo" class="tab-pane fade show active">
+									<div class="card">
+										<div class="card-body">
+											<h4 class="card-title">Normal Information</h4>
+											<div class="row form-row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>身高</label>
+														<input type="number" class="form-control" id="high" placeholder="m" th:value="${healthBasicInfo.getNormal_info().getHigh()}">
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>体重</label>
+														<input type="number" class="form-control" id="weight" placeholder="kg" th:value="${healthBasicInfo.getNormal_info().getWeight()}">
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>左眼视力</label>
+														<input type="number" class="form-control" id="eyesightL" placeholder="左眼" th:value="${healthBasicInfo.getNormal_info().getLeft_sight()}">
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>右眼视力</label>
+														<input type="number" class="form-control" id="eyesightR" placeholder="右眼" th:value="${healthBasicInfo.getNormal_info().getRight_sight()}">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="card">
+										<div class="card-body">
+											<h4 class="card-title">Smoking Situation</h4>
+											<div class="row form-row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Smoking Rate</label>
+														<input type="number" class="form-control" id="smoke_rate" th:value="${healthBasicInfo.getSmoke_info().getSmoke_rate()}" value="0" placeholder="支/日">
+													</div>
+												</div>
+												<div class="col-md-12">
+													<div class="form-group">
+														<label>Begin Time</label>
+														<input type="date" class="form-control" id="smokeBegin" th:value="${healthBasicInfo.getSmoke_info().getBeginTime()}">
+														<br>
+														<label>End Time</label>
+														<input type="date" class="form-control" id="smokeEnd" th:value="${healthBasicInfo.getSmoke_info().getEndTime()}">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="card">
+										<div class="card-body">
+											<h4 class="card-title">Alcohol Situation</h4>
+											<div class="row form-row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Alcohol Rate</label>
+														<input type="number" class="form-control" id="alcohol_rate" value="0" placeholder="次/日" th:value="${healthBasicInfo.getAlcohol_info().getAlcohol_rate()}">
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Alcohol Consumption</label>
+														<input type="number" class="form-control" id="alcohol_csp" value="0" placeholder="两/日" th:value="${healthBasicInfo.getAlcohol_info().getAlcohol_consumption()}">
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Begin Time</label>
+														<input type="date" class="form-control" id="alcoholBegin" th:value="${healthBasicInfo.getAlcohol_info().getBegin_time()}">
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>End Time</label>
+														<input type="date" class="form-control" id="alcoholEnd" th:value="${healthBasicInfo.getAlcohol_info().getEndTime()}">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="card">
+										<div class="card-body">
+											<h4 class="card-title">Physical Exercise</h4>
+											<div class="row form-row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Physical Rate</label>
+														<input type="number" class="form-control" id="physical_rate" value="0" placeholder="次/周" th:value="${healthBasicInfo.getPhysical_info().getPhysical_rate()}">
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Physical Time</label>
+														<input type="number" class="form-control" id="physical_time" value="0" placeholder="分钟/次" th:value="${healthBasicInfo.getPhysical_info().getPhysical_time()}">
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Physical way</label>
+														<input type="text" class="form-control" id="physical_way" th:value="${healthBasicInfo.getPhysical_info().getPhysical_way()}">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /BasicInfo Tab -->
+								<!-- Resume Tab -->
+								<div class="tab-pane fade" id="resume">
+									<div class="card card-table mb-0">
+										<div class="card-body">
+											<div class="table-responsive">
+												<!--                                                履历类型-->
+												<div class="card-body pt-0">
+													<div class="user-tabs">
+														<ul class="nav nav-tabs nav-tabs-bottom nav-justified flex-wrap">
+															<li class="nav-item">
+																<a class="nav-link active" href="#disease" data-toggle="tab">Disease History</a>
+															</li>
+															<li class="nav-item">
+																<a class="nav-link" href="#injury" data-toggle="tab"><span class="med-records">Injury History</span></a>
+															</li>
+															<li class="nav-item">
+																<a class="nav-link" href="#operation" data-toggle="tab"><span class="med-records">Operation History</span></a>
+															</li>
+														</ul>
+													</div>
+													<div class="tab-content">
+														<!-- disease Tab -->
+														<div id="disease" class="tab-pane fade show active">
+															<div class="card card-table mb-0">
+																<div class="card-body">
+																	<div class="table-responsive">
+																		<table class="table table-hover table-center mb-0" id="diseaseBody">
+																			<thead>
+																			<tr>
+																				<th>Time</th>
+																				<th></th>
+																			</tr>
+																			</thead>
+																			<tbody>
+																			</tbody>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- /disease Tab -->
+														<!-- injury Tab -->
+														<div id="injury" class="tab-pane fade">
+															<div class="card card-table mb-0">
+																<div class="card-body">
+																	<div class="table-responsive">
+																		<table class="table table-hover table-center mb-0" id="injuryBody">
+																			<thead>
+																			<tr>
+																				<th>Time</th>
+																				<th></th>
+																			</tr>
+																			</thead>
+																			<tbody>
+																			</tbody>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- /injury Tab -->
+														<!-- operation Tab -->
+														<div id="operation" class="tab-pane fade">
+															<div class="card card-table mb-0">
+																<div class="card-body">
+																	<div class="table-responsive">
+																		<table class="table table-hover table-center mb-0" id="operationBody">
+																			<thead>
+																			<tr>
+																				<th>Time</th>
+																				<th></th>
+																			</tr>
+																			</thead>
+																			<tbody>
+																			</tbody>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- /operation Tab -->
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Resume Tab -->
+								<!-- Exam Tab -->
+								<div class="tab-pane fade" id="exam">
+									<div class="card card-table mb-0">
+										<div class="card-body">
+											<div class="table-responsive">
+												<table class="table table-hover table-center mb-0" id="examBody">
+													<thead>
+													<tr>
+														<th>Option</th>
+														<th>Exam Value</th>
+														<th>Time</th>
+														<th>Hospital</th>
+														<th></th>
+													</tr>
+													</thead>
+													<tbody>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Exam Tab -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	<!-- /Page Content -->
+
+	<!-- Footer -->
+	<footer class="footer">
+
+		<!-- Footer Top -->
+		<div class="footer-top">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-3 col-md-6">
+
+						<!-- Footer Widget -->
+						<div class="footer-widget footer-menu">
+							<h2 class="footer-title">For Patients</h2>
+							<ul>
+								<li><a th:href="@{login}"><i class="fas fa-angle-double-right"></i> Login</a></li>
+								<li><a th:href="@{register}"><i class="fas fa-angle-double-right"></i> Register</a></li>
+								<li><a th:href="@{patient-dashboard}"><i class="fas fa-angle-double-right"></i> Patient Dashboard</a></li>
+							</ul>
+						</div>
+						<!-- /Footer Widget -->
+
+					</div>
+
+					<div class="col-lg-3 col-md-6">
+
+						<!-- Footer Widget -->
+						<div class="footer-widget footer-menu">
+							<h2 class="footer-title">For Doctors</h2>
+							<ul>
+								<li><a th:href="@{appointments}"><i class="fas fa-angle-double-right"></i> Appointments</a></li>
+								<li><a th:href="@{chat}"><i class="fas fa-angle-double-right"></i> Chat</a></li>
+								<li><a th:href="@{login}"><i class="fas fa-angle-double-right"></i> Login</a></li>
+								<li><a th:href="@{doctor-register}"><i class="fas fa-angle-double-right"></i> Register</a></li>
+								<li><a th:href="@{doctor-dashboard}"><i class="fas fa-angle-double-right"></i> Doctor Dashboard</a></li>
+							</ul>
+						</div>
+						<!-- /Footer Widget -->
+
+					</div>
+
+					<div class="col-lg-3 col-md-6">
+
+						<!-- Footer Widget -->
+						<div class="footer-widget footer-contact">
+							<h2 class="footer-title">Contact Us</h2>
+							<div class="footer-contact-info">
+								<div class="footer-address">
+									<span><i class="fas fa-map-marker-alt"></i></span>
+									<p> 3556  Beech Street, San Francisco,<br> California, CA 94108 </p>
+								</div>
+								<p>
+									<i class="fas fa-phone-alt"></i>
+									+1 315 369 5943
+								</p>
+								<p class="mb-0">
+									<i class="fas fa-envelope"></i>
+									doccure@example.com
+								</p>
+							</div>
+						</div>
+						<!-- /Footer Widget -->
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- /Footer Top -->
+
+		<!-- Footer Bottom -->
+		<div class="footer-bottom">
+			<div class="container-fluid">
+
+				<!-- Copyright -->
+				<div class="copyright">
+					<div class="row">
+						<div class="col-md-6 col-lg-6">
+							<div class="copyright-text">
+								<p class="mb-0">&copy; 2019 Doccure. All rights <a href="http://www.bootstrapmb.com/" title="bootstrapmb">Reserved</a>.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Copyright -->
+
+			</div>
+		</div>
+		<!-- /Footer Bottom -->
+	</footer>
+	<!-- /Footer -->
+
+</div>
+<!-- /Main Wrapper -->
+
+<!-- Add Resume Modal -->
+<div class="modal fade custom-modal" id="addDivDisease">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h3 class="modal-title">Create Disease History</h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label>Status</label>
+					<input class="form-control" id="status" type="text" placeholder="请输入病情状态">
+				</div>
+				<div class="form-group">
+					<label>Time</label>
+					<input class="form-control" id="time_disease" type="date">
+				</div>
+				<div class="form-group">
+					<label>请输入确诊医院、病情名称、病情描述或其他信息</label>
+					<div class="form-group" id="editorDisease"></div>
+				</div>
+				<div class="submit-section text-center">
+<!--					<button type="submit" class="btn btn-primary submit-btn" data-dismiss="modal" id="confirmDisease" th:value="${disease}">Confirm</button>-->
+					<button type="submit" class="btn btn-primary submit-btn" id="submitDisease" th:value="${disease}">Submit</button>
+					<button type="button" class="btn btn-secondary submit-btn" data-dismiss="modal" id="cancelDisease">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Add Disease Modal -->
+
+<!-- Add Injury Modal -->
+<div class="modal fade custom-modal" id="addDivInjury">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h3 class="modal-title">Create Injury History</h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label>Time</label>
+					<input class="form-control" id="time_injury" type="date">
+				</div>
+				<div class="form-group">
+					<label>请输入确诊医院、外伤名称、外伤描述情况或其他信息</label>
+					<div class="form-group" id="editorInjury"></div>
+				</div>
+				<div class="submit-section text-center">
+<!--					<button type="submit" class="btn btn-primary submit-btn" data-dismiss="modal" id="confirmInjury" th:value="${injury}">Confirm</button>-->
+					<button type="submit" class="btn btn-primary submit-btn" id="submitInjury" th:value="${injury}">Submit</button>
+					<button type="button" class="btn btn-secondary submit-btn" data-dismiss="modal" id="cancelInjury" th:value="${injury}">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Add Injury Modal -->
+
+<!-- Add Operation Modal -->
+<div class="modal fade custom-modal" id="addDivOperation">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h3 class="modal-title">Create Operation History</h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label>Time</label>
+					<input class="form-control" id="time_operation" type="date">
+				</div>
+				<div class="form-group">
+					<label>请输入手术医院、手术名称、手术结果或其他信息</label>
+					<div class="form-group" id="editorOperation"></div>
+				</div>
+				<div class="submit-section text-center">
+<!--					<button type="submit" class="btn btn-primary submit-btn" data-dismiss="modal" id="confirmOperation" th:value="${operation}">Confirm</button>-->
+					<button type="submit" class="btn btn-primary submit-btn" id="submitOperation" th:value="${operation}">Submit</button>
+					<button type="button" class="btn btn-secondary submit-btn" data-dismiss="modal" id="cancelOperation">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Add Operation Modal -->
+
+<!-- Add Exam Modal -->
+<div class="modal fade custom-modal" id="addDivExam">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h3 class="modal-title">Create Exam History</h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label>Time</label>
+					<input class="form-control" id="time_exam" type="datetime-local">
+				</div>
+				<div class="form-group">
+					<label>Hospital</label>
+					<input class="form-control" id="hospital_exam" type="text">
+				</div>
+				<div class="form-group">
+					<label>Option</label>
+					<input class="form-control" id="option_exam" type="text">
+				</div>
+				<div class="form-group">
+					<label>Exam Value</label>
+					<input class="form-control" id="value_exam" type="text">
+				</div>
+				<div class="row form-row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="change-avatar">
+								<div class="profile-img">
+									<a href="" id="exam_image"></a>
+								</div>
+								<div class="upload-img">
+									<div class="change-photo-btn">
+										<span><i class="fa fa-upload"></i>Exam Image</span>
+										<input type="file" class="upload" id="examImageUpload">
+									</div>
+									<small class="form-text text-muted">Relevant Image File</small>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="change-avatar">
+								<div class="profile-img">
+									<a href="" id="exam_otherFile"></a>
+								</div>
+								<div class="upload-img">
+									<div class="change-photo-btn">
+										<span><i class="fa fa-upload"></i>Other File</span>
+										<input type="file" class="upload" id="examOtherUpload">
+									</div>
+									<small class="form-text text-muted">Relevant Other File</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>请输入分析结果或其他信息</label>
+					<div class="form-group" id="editorExam"></div>
+				</div>
+				<div class="submit-section text-center">
+<!--					<button type="submit" class="btn btn-primary submit-btn" data-dismiss="modal" id="confirmExam">Confirm</button>-->
+					<button type="submit" class="btn btn-primary submit-btn" id="submitExam">Submit</button>
+					<button type="button" class="btn btn-secondary submit-btn" data-dismiss="modal" id="cancelExam">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Add Exam Modal -->
+<!-- jQuery -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/notiflix-1.3.0.min.js}"></script>
+<script th:src="@{/js/jquery-1.11.0.min.js}"></script>
+<!-- Bootstrap Core JS -->
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+
+<script th:src="@{/plugins/select2/js/select2.min.js}"></script>
+
+<!-- Datetimepicker JS -->
+<script th:src="@{/js/moment.min.js}"></script>
+<script th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+
+<!-- Sticky Sidebar JS -->
+<script th:src="@{/plugins/theia-sticky-sidebar/ResizeSensor.js}"></script>
+<script th:src="@{/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js}"></script>
+
+<!-- Custom JS -->
+<script th:src="@{/js/script.js}"></script>
+<script th:src="@{/js/wangEditor.min.js}"></script>
+
+<script th:src="@{/js/services/health-record.js}"></script>
+<script th:src="@{/js/services/wangEditor.js}"></script>
+<script th:src="@{/js/services/websocket.js}"></script>
+
+
+<script th:inline="javascript">
+	Notiflix.Notify.Init();
+	var E = wangEditor;
+	var editorDisease = new E("#editorDisease");
+	initEditor(editorDisease,"请输入确诊医院、病情描述或其他信息")
+	editorDisease.create();
+
+	var editorInjury = new E("#editorInjury");
+	initEditor(editorInjury,"请输入确诊医院、外伤名称、外伤描述情况或其他信息");
+	editorInjury.create();
+
+	var editorOperation = new E("#editorOperation");
+	initEditor(editorOperation,"请输入手术医院、手术名称、手术结果或其他信");
+	editorOperation.create();
+
+	var editorExam = new E("#editorExam");
+	initEditor(editorExam,"请输入分析结果或其他信息");
+	editorExam.create();
+
+	var recordTypeIdMap = [[${recordTypeIdMap}]];
+	var types = [];
+	types.push($("#submitDisease").val());types.push($("#submitInjury").val());types.push($("#submitOperation").val());
+	showRecords(recordTypeIdMap);
+	var nowResumeDeal_id = 0;
+
+	var examInfosIdMap = [[${examInfosIdMap}]];
+	showExams(examInfosIdMap);
+	var websocket = null;
+	websocket = connectWebSocket(websocket);
+
+	let patientInfo = [[${patientInfo}]];
+	let patient_email = patientInfo.email;
+</script>
+</body>
+</html>

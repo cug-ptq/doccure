@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.doccure.dao.DoctorInfoDao">
+    <!--插入-->
+    <insert id="insertDoctorInfo" parameterType="com.example.doccure.entity.info.DoctorInfo">
+        insert into doctor_info(email, username, telephone, gender, birth, image_url, services, address, about_me,speciality)
+        values (#{email}, #{username}, #{telephone},#{gender},
+                #{birth}, #{image_url}, #{services}, #{address}, #{about_me}, #{speciality})
+    </insert>
+
+    <delete id="deleteDoctorInfo" parameterType="String">
+        delete
+        from doctor_info
+        where email=#{email};
+    </delete>
+
+    <!--得到所有医生信息-->
+    <select id="getAllDoctorInfo" resultType="com.example.doccure.entity.info.DoctorInfo">
+        select * from doctor_info
+    </select>
+
+    <!--根据email得到医生信息-->
+    <select id="getDoctorInfoByE" parameterType="String" resultType="com.example.doccure.entity.info.DoctorInfo">
+        select * from doctor_info where email=#{email}
+    </select>
+
+    <!--更新医生信息-->
+    <update id="updateDoctorInfo" parameterType="com.example.doccure.entity.info.DoctorInfo">
+        update doctor_info
+        <set>
+            <if test="doctorInfo.username!=null">username=#{doctorInfo.username},</if>
+            <if test="doctorInfo.telephone!=null">telephone=#{doctorInfo.telephone},</if>
+            <if test="doctorInfo.address!=null">address=#{doctorInfo.address},</if>
+            <if test="doctorInfo.image_url!=null">image_url=#{doctorInfo.image_url},</if>
+            <if test="doctorInfo.birth!=null">birth=#{doctorInfo.birth},</if>
+            <if test="doctorInfo.gender!=null">gender=#{doctorInfo.gender},</if>
+            <if test="doctorInfo.services!=null">services=#{doctorInfo.services},</if>
+            <if test="doctorInfo.about_me!=null">about_me=#{doctorInfo.about_me}</if>
+        </set>
+        where email=#{email}
+    </update>
+
+    <!-- 教育 工作-->
+    <insert id="insertEdu" parameterType="com.example.doccure.entity.doctor_exp_edu.DoctorEdu">
+        insert into doctor_edu(email, degree, college, year_complete)
+        value (#{email},#{degree},#{college},#{year_complete})
+    </insert>
+    <insert id="insertExp" parameterType="com.example.doccure.entity.doctor_exp_edu.DoctorExp">
+        insert into doctor_exp(email, hospital, from_time, to_time, designation)
+            value (#{email},#{hospital},#{from_time},#{to_time},#{designation})
+    </insert>
+    <delete id="deleteEduByE" parameterType="String">
+        delete from doctor_edu where email=#{email}
+    </delete>
+    <delete id="deleteExpByE" parameterType="String">
+        delete from doctor_exp where email=#{email}
+    </delete>
+    <select id="getAllDoctorEduByE" parameterType="String" resultType="com.example.doccure.entity.doctor_exp_edu.DoctorEdu">
+        select * from doctor_edu where email=#{email}
+    </select>
+    <select id="getAllDoctorExpByE" parameterType="String" resultType="com.example.doccure.entity.doctor_exp_edu.DoctorExp">
+        select * from doctor_exp where email=#{email}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.doccure.dao.PatientInfoDao">
+    <insert id="insertPatientInfo" parameterType="com.example.doccure.entity.info.PatientInfo">
+        insert into patient_info(email, telephone, gender, image_url, birth, address, username)
+        values (#{email}, #{telephone}, #{gender},#{image_url}, #{birth}, #{address}, #{username})
+    </insert>
+    <select id="getAllPatientInfo" resultType="com.example.doccure.entity.info.PatientInfo">
+        select * from patient_info
+    </select>
+    <select id="getPatientInfoByE" parameterType="String" resultType="com.example.doccure.entity.info.PatientInfo">
+        select * from patient_info where email=#{email}
+    </select>
+    <update id="updatePatientInfo">
+        update patient_info
+            <set>
+                <if test="patientInfo.username!=null">username=#{patientInfo.username},</if>
+                <if test="patientInfo.telephone!=null">telephone=#{patientInfo.telephone},</if>
+                <if test="patientInfo.address!=null">address=#{patientInfo.address},</if>
+                <if test="patientInfo.image_url!=null">image_url=#{patientInfo.image_url},</if>
+                <if test="patientInfo.birth!=null">birth=#{patientInfo.birth},</if>
+                <if test="patientInfo.gender!=null">gender=#{patientInfo.gender},</if>
+            </set>
+        where email=#{email}
+    </update>
+
+
+<!--    基本健康信息-->
+    <resultMap id="healthBasicInfo" type="com.example.doccure.entity.resume.HealthBasicInfo">
+        <result typeHandler="com.example.doccure.handler.SmokeInfoHandler" column="smoke_info" javaType="com.example.doccure.entity.health_basicInfo.SmokeInfo"
+                jdbcType="VARCHAR"
+                property="smoke_info"/>
+        <result typeHandler="com.example.doccure.handler.NormalInfoHandler" column="normal_info" javaType="com.example.doccure.entity.health_basicInfo.NormalHealthyInfo"
+                jdbcType="VARCHAR"
+                property="normal_info"/>
+        <result typeHandler="com.example.doccure.handler.AlcoholInfoHandler" column="alcohol_info" javaType="com.example.doccure.entity.health_basicInfo.AlcoholInfo"
+                jdbcType="VARCHAR"
+                property="alcohol_info"/>
+        <result typeHandler="com.example.doccure.handler.PhysicalInfoHandler" column="physical_info" javaType="com.example.doccure.entity.health_basicInfo.PhysicalInfo"
+                jdbcType="VARCHAR"
+                property="physical_info"/>
+    </resultMap>
+    <select id="getHealthBasicInfoByPE" parameterType="String" resultMap="healthBasicInfo">
+        select * from health_basic where patient_email=#{patient_email};
+    </select>
+
+    <insert id="insertBasicInfo" parameterType="com.example.doccure.entity.resume.HealthBasicInfo">
+        insert into health_basic (patient_email, normal_info, smoke_info, alcohol_info, physical_info)
+        values (#{patient_email},#{normal_info,typeHandler=com.example.doccure.handler.NormalInfoHandler},
+                #{smoke_info,typeHandler=com.example.doccure.handler.SmokeInfoHandler},
+                #{alcohol_info,typeHandler=com.example.doccure.handler.AlcoholInfoHandler},
+                #{physical_info,typeHandler=com.example.doccure.handler.PhysicalInfoHandler});
+    </insert>
+    
+    <update id="updateHealthBasicInfoByPE_Info">
+        update health_basic
+            <set>
+                <if test="healthBasicInfo.normal_info!=null">normal_info=#{healthBasicInfo.normal_info,typeHandler=com.example.doccure.handler.NormalInfoHandler},</if>
+                <if test="healthBasicInfo.smoke_info!=null">smoke_info=#{healthBasicInfo.smoke_info,typeHandler=com.example.doccure.handler.SmokeInfoHandler},</if>
+                <if test="healthBasicInfo.alcohol_info!=null">alcohol_info=#{healthBasicInfo.alcohol_info,typeHandler=com.example.doccure.handler.AlcoholInfoHandler},</if>
+                <if test="healthBasicInfo.physical_info!=null">physical_info=#{healthBasicInfo.physical_info,typeHandler=com.example.doccure.handler.PhysicalInfoHandler}</if>
+            </set>
+        where patient_email=#{patient_email}
+    </update>
+
+    <delete id="deleteHealthBasicInfoByPE" parameterType="String">
+        delete from health_basic where patient_email=#{patient_email}
+    </delete>
+
+
+<!--    履历-->
+    <insert id="insertResume" parameterType="com.example.doccure.entity.resume.HealthResume" useGeneratedKeys="true" keyProperty="id">
+        insert into health_record (patient_email, health_type, health_describe, time, status)
+        values (#{patient_email},#{health_type},#{health_describe},#{time},#{status});
+    </insert>
+    <select id="getHealthResumeById" parameterType="int" resultType="com.example.doccure.entity.resume.HealthResume">
+        select *
+        from health_record where id=#{id};
+    </select>
+    <select id="getHealthResumeByPE" parameterType="String" resultType="com.example.doccure.entity.resume.HealthResume">
+        select *
+        from health_record where patient_email=#{patient_email};
+    </select>
+    <delete id="deleteHealthResume" parameterType="int">
+        delete
+        from health_record
+        where id=#{id};
+    </delete>
+    <update id="updateHealthResumeBy">
+        update health_record
+        <set>
+            <if test="healthResume.time!=null">time=#{healthResume.time},</if>
+            <if test="healthResume.health_describe!=null">health_describe=#{healthResume.health_describe},</if>
+            <if test="healthResume.status!=null">status=#{healthResume.status}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+<!--    体检-->
+    <select id="getHealthExamInfoById" parameterType="int" resultType="com.example.doccure.entity.resume.HealthExamInfo">
+        select *
+        from health_exam where id=#{id};
+    </select>
+    <select id="getHealthExamInfoByPE" parameterType="String" resultType="com.example.doccure.entity.resume.HealthExamInfo">
+        select *
+        from health_exam where patient_email=#{patient_email};
+    </select>
+    <insert id="insertExam" parameterType="com.example.doccure.entity.resume.HealthExamInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into health_exam (patient_email, time, hospital, option_exam, value_exam, description, image_url, file_url)
+        values (#{patient_email},#{time},#{hospital},#{option_exam},#{value_exam},#{description},#{image_url},#{file_url});
+    </insert>
+    <delete id="deleteHealthExamInfoById" parameterType="int">
+        delete
+        from health_exam
+        where id=#{id};
+    </delete>
+    <update id="updateHealthExamInfoByIdInfo">
+        update health_exam
+        <set>
+            <if test="healthExamInfo.time!=null">time=#{healthExamInfo.time},</if>
+            <if test="healthExamInfo.hospital!=null">hospital=#{healthExamInfo.hospital},</if>
+            <if test="healthExamInfo.option_exam!=null">option_exam=#{healthExamInfo.option_exam},</if>
+            <if test="healthExamInfo.value_exam!=null">value_exam=#{healthExamInfo.value_exam},</if>
+            <if test="healthExamInfo.image_url!=null">image_url=#{healthExamInfo.image_url},</if>
+            <if test="healthExamInfo.file_url!=null">file_url=#{healthExamInfo.file_url},</if>
+            <if test="healthExamInfo.description!=null">description=#{healthExamInfo.description}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+<!--    家访数据-->
+    <select id="getVisitInfoById" parameterType="int" resultType="com.example.doccure.entity.VisitInfo">
+        select *
+        from visit where id=#{id};
+    </select>
+    <select id="getVisitInfoByPE" parameterType="String" resultType="com.example.doccure.entity.VisitInfo">
+        select *
+        from visit where patient_email=#{patient_email};
+    </select>
+
+    <select id="getVisitInfoByDPE" parameterType="String" resultType="com.example.doccure.entity.VisitInfo">
+        select *
+        from visit where doctor_email=#{doctor_email} and patient_email=#{patient_email};
+    </select>
+
+    <insert id="insertVisit" parameterType="com.example.doccure.entity.VisitInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into visit (doctor_email, patient_email, time, visit_result,is_read)
+        values (#{doctor_email},#{patient_email},#{time},#{visit_result},#{is_read});
+    </insert>
+
+    <delete id="deleteVisitInfoById" parameterType="int">
+        delete
+        from visit
+        where id=#{id};
+    </delete>
+
+    <update id="updateVisitInfoByIdInfo">
+        update visit
+        <set>
+            <if test="visitInfo.time!=null">time=#{visitInfo.time},</if>
+            <if test="visitInfo.visit_result!=null">visit_result=#{visitInfo.visit_result},</if>
+            <if test="visitInfo.is_read!=null">is_read=#{visitInfo.is_read}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <select id="getAllVisitByPE_OtherDE" parameterType="String" resultType="com.example.doccure.entity.VisitInfo">
+        select * from visit where patient_email=#{patient_email} and doctor_email&lt;&gt;#{doctor_email}
+    </select>
+
+    <update id="updateVisitInfoIsReadByIdIsRead">
+        update visit
+        <set>
+            <if test="is_read!=null">is_read=#{is_read}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+<!--    健康数据-->
+    <insert id="insertData" parameterType="com.example.doccure.entity.HealthData" useGeneratedKeys="true" keyProperty="id">
+        insert into health_data (patient_email, health_type, health_data1,health_data2, time)
+        values (#{patient_email}, #{health_type}, #{health_data1},#{health_data2},#{time});
+    </insert>
+
+    <select id="getHealthDataById" parameterType="int" resultType="com.example.doccure.entity.HealthData">
+        select *
+        from health_data where id=#{id};
+    </select>
+
+    <select id="getHealthDataListByPE" parameterType="String" resultType="com.example.doccure.entity.HealthData">
+        select *
+        from health_data where patient_email=#{patient_email};
+    </select>
+
+    <select id="getHealthDataListByPETypeTime" resultType="com.example.doccure.entity.HealthData">
+        select *
+        from health_data where patient_email=#{patient_email} and id%#{internal}=0 and health_type=#{health_type} and time between #{beginTime} and #{endTime};
+    </select>
+
+<!--    <resultMap id="healthSingleTimeDataMap"  type="java.util.Map">-->
+<!--        <result property="key" column="time" javaType="java.sql.Timestamp"/>-->
+<!--        <result property="value" column="health_data1" javaType="java.lang.String" />-->
+<!--    </resultMap>-->
+
+<!--    <select id="getSingleDataByPETypeTime" resultMap="healthSingleTimeDataMap" parameterType="String">-->
+<!--        select time,health_data1 from health_data where patient_email=#{patient_email} and id%5=0 and time between #{beginTime} and #{endTime};-->
+<!--    </select>-->
+</mapper>

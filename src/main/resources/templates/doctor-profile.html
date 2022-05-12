@@ -1,0 +1,459 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<title>Doccure</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		
+		<!-- Favicons -->
+		<link th:href="@{/img/favicon.png}" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" th:href="@{/plugins/fontawesome/css/fontawesome.min.css}">
+		<link rel="stylesheet" th:href="@{/plugins/fontawesome/css/all.min.css}">
+		
+		<!-- Fancybox CSS -->
+		<link rel="stylesheet" th:href="@{/plugins/fancybox/jquery.fancybox.min.css}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" th:href="@{/css/style.css}">
+		
+		<script th:src="@{/js/html5shiv.min.js}"></script>
+		<script th:src="@{/js/respond.min.js}"></script>
+	
+	</head>
+	<body>
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+		
+			<!-- Header -->
+			<header class="header">
+				<nav class="navbar navbar-expand-lg header-nav">
+					<div class="navbar-header">
+						<a id="mobile_btn" href="javascript:void(0);">
+							<span class="bar-icon">
+								<span></span>
+								<span></span>
+								<span></span>
+							</span>
+						</a>
+						<a th:href="@{/index}" class="navbar-brand logo">
+							<img th:src="@{/img/logo.png}" class="img-fluid" alt="Logo">
+						</a>
+					</div>
+					<div class="main-menu-wrapper">
+						<div class="menu-header">
+							<a th:href="@{/index}" class="menu-logo">
+								<img th:src="@{/img/logo.png}" class="img-fluid" alt="Logo">
+							</a>
+							<a id="menu_close" class="menu-close" href="javascript:void(0);">
+								<i class="fas fa-times"></i>
+							</a>
+						</div>
+						<ul class="main-nav">
+							<li>
+								<a th:href="@{/index}">Home</a>
+							</li>
+							<li>
+								<a th:href="@{/doctors}">OurDoctors</a>
+							</li>
+							<li class="has-submenu">
+								<a href="">Doctors <i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a th:href="@{/doctor-dashboard}">Doctor Dashboard</a></li>
+									<li><a th:href="@{/appointments}">Appointments</a></li>
+									<li><a th:href="@{/doctor-visit}">MyVisit</a></li>
+									<li><a th:href="@{/my-patients}">Patients List</a></li>
+									<li><a th:href="@{/chat-doctor}">Chat</a></li>
+									<li><a th:href="@{/doctor-profile-settings}">Profile Settings</a></li>
+									<li><a th:href="@{/health-analysis}">Health Analysis</a></li>
+									<li><a th:href="@{/doctor-register}">Doctor Register</a></li>
+								</ul>
+							</li>	
+							<li class="has-submenu active">
+								<a href="">Patients <i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li class="active"><a th:href="@{/doctor-profile}">Doctor Profile</a></li>
+									<li><a th:href="@{/booking-success}">Booking Success</a></li>
+									<li><a th:href="@{/patient-dashboard}">Patient Dashboard</a></li>
+									<li><a th:href="@{/myHealthRecord}">Health Record</a></li>
+									<li><a th:href="@{/myAssess}">Health Assessment</a></li>
+									<li><a th:href="@{/chat}">Chat</a></li>
+									<li><a th:href="@{/profile-settings}">Profile Settings</a></li>
+									<li><a th:href="@{/change-password}">Change Password</a></li>
+								</ul>
+							</li>
+							<li>
+								<a th:href="@{/admin/login}" target="_blank">Admin</a>
+							</li>
+							<li class="login-link">
+								<a th:href="@{/login}">Login / Signup</a>
+							</li>
+						</ul>	 
+					</div>		 
+					<ul class="nav header-navbar-rht">
+						<li class="nav-item contact-item">
+							<div class="header-contact-img">
+								<i class="far fa-hospital"></i>							
+							</div>
+							<div class="header-contact-detail">
+								<p class="contact-header">Contact</p>
+								<p class="contact-info-header"> +1 315 369 5943</p>
+							</div>
+						</li>
+						<li class="nav-item" id="login-signup">
+							<a class="nav-link header-login" th:href="@{/login}">login / Signup </a>
+						</li>
+						<!-- User Menu -->
+						<li class="nav-item dropdown has-arrow logged-item" id="userMenu">
+							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+								<span class="user-img">
+                                    <img class="rounded-circle" th:src="${userImgUrl}" width="31" alt="Darren Elder">
+                                </span>
+							</a>
+							<div class="dropdown-menu dropdown-menu-right">
+								<div class="user-header">
+									<div class="avatar avatar-sm">
+										<img th:src="${userImgUrl}" alt="User Image" class="avatar-img rounded-circle">
+									</div>
+									<div class="user-text">
+										<h6 th:text="${user.username}"></h6>
+										<p class="text-muted mb-0" th:text="${user.getRoleName()}"></p>
+									</div>
+								</div>
+								<a class="dropdown-item" th:href="@{/doctor-dashboard}">Dashboard</a>
+								<a class="dropdown-item" th:href="@{/doctor-profile-settings}">Profile Settings</a>
+								<a class="dropdown-item" th:href="@{/logout}">Logout</a>
+							</div>
+						</li>
+					</ul>
+				</nav>
+			</header>
+			<!-- /Header -->
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a th:href="@{/index}">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Doctor Profile</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Doctor Profile</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container">
+
+					<!-- Doctor Widget -->
+					<div class="card">
+						<div class="card-body">
+							<div class="doctor-widget">
+								<div class="doc-info-left">
+									<div class="doctor-img">
+										<img th:src="@{/img/doctors/doctor-thumb-02.jpg}" class="img-fluid" alt="User Image">
+									</div>
+									<div class="doc-info-cont">
+										<h4 class="doc-name" th:text="${doctorInfo.username}"></h4>
+										<p class="doc-speciality" th:text="${edu}"></p>
+										<p class="doc-department"><img th:src="@{/img/specialities/specialities-05.png}" class="img-fluid" alt="Speciality">Dentist</p>
+										<div class="rating">
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star filled"></i>
+											<i class="fas fa-star"></i>
+											<span class="d-inline-block average-rating">(35)</span>
+										</div>
+										<div class="clinic-details">
+											<!-- 地址 -->
+											<p class="doc-location" th:text="${doctorInfo.address}"><i class="fas fa-map-marker-alt"></i></p>
+										</div>
+										<div class="clinic-services">
+											<span th:text="${doctorInfo.services}"></span>
+										</div>
+									</div>
+								</div>
+								<div class="doc-info-right">
+									<div class="clinic-booking">
+										<a class="apt-btn" th:href="@{/booking(email=${doctorInfo.email})}">Book Appointment</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Doctor Widget -->
+					
+					<!-- Doctor Details Tab -->
+					<div class="card">
+						<div class="card-body pt-0">
+						
+							<!-- Tab Menu -->
+							<nav class="user-tabs mb-4">
+								<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+									<li class="nav-item">
+										<a class="nav-link active" href="#doc_overview" data-toggle="tab">Overview</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#doc_business_hours" data-toggle="tab">Business Hours</a>
+									</li>
+								</ul>
+							</nav>
+							<!-- /Tab Menu -->
+							
+							<!-- Tab Content -->
+							<div class="tab-content pt-0">
+							
+								<!-- Overview Content -->
+								<div role="tabpanel" id="doc_overview" class="tab-pane fade show active">
+									<div class="row">
+										<div class="col-md-12 col-lg-9">
+										
+											<!-- About Details -->
+											<div class="widget about-widget">
+												<h4 class="widget-title">About Me</h4>
+												<p th:text="${doctorInfo.about_me}"></p>
+											</div>
+											<!-- /About Details -->
+										
+											<!-- Education Details -->
+											<div class="widget education-widget">
+												<h4 class="widget-title">Education</h4>
+												<div class="experience-box">
+													<ul class="experience-list" id="education">
+
+													</ul>
+												</div>
+											</div>
+											<!-- /Education Details -->
+									
+											<!-- Experience Details -->
+											<div class="widget experience-widget">
+												<h4 class="widget-title">Work & Experience</h4>
+												<div class="experience-box">
+													<ul class="experience-list" id="experience">
+
+													</ul>
+												</div>
+											</div>
+											<!-- /Experience Details -->
+
+											<!-- Services List -->
+											<div class="service-list">
+												<h4>Services</h4>
+												<ul class="clearfix" id="services">
+
+												</ul>
+											</div>
+											<!-- /Services List -->
+										</div>
+									</div>
+								</div>
+								<!-- /Overview Content -->
+
+								<!-- Business Hours Content -->
+								<div role="tabpanel" id="doc_business_hours" class="tab-pane fade">
+									<div class="row">
+										<div class="col-md-6 offset-md-3">
+										
+											<!-- Business Hours Widget -->
+											<div class="widget business-widget">
+												<div class="widget-content">
+													<div class="listing-hours">
+														<div class="listing-day current">
+															<div class="day">Today <span>5 Nov 2019</span></div>
+															<div class="time-items">
+																<span class="open-status"><span class="badge bg-success-light">Open Now</span></span>
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Monday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Tuesday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Wednesday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Thursday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Friday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Saturday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
+															</div>
+														</div>
+														<div class="listing-day closed">
+															<div class="day">Sunday</div>
+															<div class="time-items">
+																<span class="time"><span class="badge bg-danger-light">Closed</span></span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- /Business Hours Widget -->
+									
+										</div>
+									</div>
+								</div>
+								<!-- /Business Hours Content -->
+								
+							</div>
+						</div>
+					</div>
+					<!-- /Doctor Details Tab -->
+
+				</div>
+			</div>		
+			<!-- /Page Content -->
+   
+			<!-- Footer -->
+			<footer class="footer">
+				
+				<!-- Footer Top -->
+				<div class="footer-top">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">For Patients</h2>
+									<ul>
+										<li><a th:href="@{/login}"><i class="fas fa-angle-double-right"></i> Login</a></li>
+										<li><a th:href="@{/register}"><i class="fas fa-angle-double-right"></i> Register</a></li>
+										<li><a th:href="@{/patient-dashboard}"><i class="fas fa-angle-double-right"></i> Patient Dashboard</a></li>
+									</ul>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">For Doctors</h2>
+									<ul>
+										<li><a th:href="@{/appointments}"><i class="fas fa-angle-double-right"></i> Appointments</a></li>
+										<li><a th:href="@{/chat}"><i class="fas fa-angle-double-right"></i> Chat</a></li>
+										<li><a th:href="@{/login}"><i class="fas fa-angle-double-right"></i> Login</a></li>
+										<li><a th:href="@{/doctor-register}"><i class="fas fa-angle-double-right"></i> Register</a></li>
+										<li><a th:href="@{/doctor-dashboard}"><i class="fas fa-angle-double-right"></i> Doctor Dashboard</a></li>
+									</ul>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-contact">
+									<h2 class="footer-title">Contact Us</h2>
+									<div class="footer-contact-info">
+										<div class="footer-address">
+											<span><i class="fas fa-map-marker-alt"></i></span>
+											<p> 3556  Beech Street, San Francisco,<br> California, CA 94108 </p>
+										</div>
+										<p>
+											<i class="fas fa-phone-alt"></i>
+											+1 315 369 5943
+										</p>
+										<p class="mb-0">
+											<i class="fas fa-envelope"></i>
+											doccure@example.com
+										</p>
+									</div>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- /Footer Top -->
+				
+				<!-- Footer Bottom -->
+                <div class="footer-bottom">
+					<div class="container-fluid">
+					
+						<!-- Copyright -->
+						<div class="copyright">
+							<div class="row">
+								<div class="col-md-6 col-lg-6">
+									<div class="copyright-text">
+										<p class="mb-0">&copy; 2019 Doccure. All rights <a href="http://www.bootstrapmb.com/" title="bootstrapmb">Reserved</a>.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Copyright -->
+						
+					</div>
+				</div>
+				<!-- /Footer Bottom -->
+				
+			</footer>
+			<!-- /Footer -->
+		   
+		</div>
+		<!-- /Main Wrapper -->
+		<!-- jQuery -->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script th:src="@{/js/popper.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		
+		<!-- Fancybox JS -->
+		<script th:src="@{/plugins/fancybox/jquery.fancybox.min.js}"></script>
+		
+		<!-- Custom JS -->
+		<script th:src="@{/js/script.js}"></script>
+		<script th:src="@{/js/doctor-profile.js}"></script>
+		<script th:inline="javascript">
+			let isLogin = [[${isLogin}]];
+			showL_S_U(isLogin);
+			let doctorInfo = [[${doctorInfo}]];
+			let doctorEduList = [[${doctorEduList}]];
+			let doctorExpList = [[${doctorExpList}]];
+			console.log(doctorInfo.services);
+			showDoctorInfo(doctorEduList,doctorExpList,doctorInfo.services);
+		</script>
+	</body>
+</html>

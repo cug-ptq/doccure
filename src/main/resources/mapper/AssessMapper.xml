@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.doccure.dao.AssessDao">
+    <insert id="insert" parameterType="com.example.doccure.entity.Assess" keyProperty="id" useGeneratedKeys="true">
+        insert into assess(patient_email, doctor_email, description, content,is_read,time)
+        values (#{patient_email},#{doctor_email},#{description},#{content},#{is_read},#{time})
+    </insert>
+
+    <delete id="deleteById" parameterType="int">
+        delete from assess where id=#{id}
+    </delete>
+
+    <select id="getAssessById" parameterType="int" resultType="com.example.doccure.entity.Assess">
+        select * from assess where id=#{id}
+    </select>
+
+    <select id="getAssessByDPE_Time" resultType="com.example.doccure.entity.Assess">
+        select * from assess where doctor_email=#{doctor_email} and patient_email=#{patient_email} and
+                                   time=#{time}
+    </select>
+
+    <select id="getAssessByPE_IsRead" resultType="com.example.doccure.entity.Assess">
+        select * from assess where patient_email=#{patient_email} and is_read=#{is_read}
+    </select>
+
+    <select id="getAllAssessByPE" resultType="com.example.doccure.entity.Assess">
+        select * from assess where patient_email=#{patient_email}
+    </select>
+
+    <select id="getAssessByDE" parameterType="String" resultType="com.example.doccure.entity.Assess">
+        select * from assess where doctor_email=#{doctor_email}
+    </select>
+
+    <select id="getAllAssessByPE_OtherDE" parameterType="String" resultType="com.example.doccure.entity.Assess">
+        select * from assess where patient_email=#{patient_email} and doctor_email&lt;&gt;#{doctor_email}
+    </select>
+
+    <update id="updateIs_Read" parameterType="int">
+        update assess
+        <set>
+            <if test="is_read!=null">is_read=#{is_read}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="updateAssessById">
+        update assess
+        <set>
+            <if test="assess.time!=null">time=#{assess.time},</if>
+            <if test="assess.content!=null">content=#{assess.content},</if>
+            <if test="assess.is_read!=null">is_read=#{assess.is_read},</if>
+            <if test="assess.description!=null">description=#{assess.description}</if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>
