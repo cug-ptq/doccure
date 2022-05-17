@@ -16,13 +16,10 @@ function changeChatList(email) {
         $(nowTo).attr("class","media");
         nowTo = "#" + email;
         $(nowTo).attr("class","media read-chat active");
-
         //处理chatBody
         $(nowDivChatBody).hide();
         addChatBody(email,true);
         nowDivChatBody = "#chatBody" + email;
-
-
     }
     else {
         //显示界面
@@ -46,6 +43,7 @@ function changeChatList(email) {
 
     //提交时，得到id->得到正确email
     $(sendMessage).attr("value",email);
+    $(video_start).attr("href",call());
     $("#userNameChat").text(emailToMap[email].username);
     $("#userNameChatImage").attr("src",emailToMap[email].image_url).attr("alt",emailToMap[email].username);
     toZero(emailToMap[email].email);
@@ -62,6 +60,7 @@ function clickTo(obj) {
     $(nowTo).attr("class","media");
     nowTo = "#"+obj.id;
     $(nowTo).attr("class","media read-chat active");
+
     //显示界面
     $(nowDivChatBody).hide();
     nowDivChatBody = "#chatBody" + obj.id;
@@ -74,7 +73,7 @@ function clickTo(obj) {
     addScrollListener(obj.id);
     //提交时，得到id->得到正确email
     $(sendMessage).attr("value",obj.id);
-
+    $(video_start).attr("href",call());
     $("#userNameChat").text(emailToMap[obj.id].username);
     $("#userNameChatImage").attr("src",emailToMap[obj.id].image_url).attr("alt",emailToMap[obj.id].username);
 
@@ -461,4 +460,15 @@ Date.prototype.format = function(fmt = "yyyy-MM-dd HH:mm:ss"){
     }
 
     return fmt;
+}
+
+function call(){
+    let href = "";
+    if (isDoctor){
+       href  = "/video-call-doctor?patient_email=" + emailToMap[$(sendMessage).attr("value")].email;
+    }
+    else {
+        href = "/video-call-patient?doctor_email=" + emailToMap[$(sendMessage).attr("value")].email;
+    }
+    return href;
 }

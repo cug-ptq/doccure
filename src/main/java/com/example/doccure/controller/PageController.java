@@ -288,6 +288,7 @@ public class PageController {
         return "redirect:/blank-page";
     }
 
+
     @RequestMapping("/doctor-visit")
     public String healthVisit(Model model,HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("user");
@@ -434,6 +435,39 @@ public class PageController {
             }
             else {
                 message = "您不是医生";
+            }
+        }
+        return "redirect:/blank-page";
+    }
+
+    @RequestMapping("/video-call-doctor") //未完成
+    public String videoCallDoctor(Model model, HttpServletRequest request,String patient_email){
+        User user = (User) request.getSession().getAttribute("user");
+        if (user!=null){
+            model.addAttribute("user",user);
+            if (user.getRole()==Constant.doctorRole){
+                DoctorInfo doctorInfo = doctorInfoService.getDoctorInfoByE(user.getEmail());
+                model.addAttribute("doctorInfo",doctorInfo);
+                model.addAttribute("toUserEmail",patient_email);
+                model.addAttribute("toUserInfo",patientInfoService.getPatientInfoByE(patient_email));
+                return "video-call-doctor";
+            }
+        }
+        return "redirect:/blank-page";
+    }
+
+    @RequestMapping("/video-call-patient") //未完成
+    public String videoCallPatient(Model model, HttpServletRequest request, String doctor_email){
+        User user = (User) request.getSession().getAttribute("user");
+        System.out.println(doctor_email);
+        if (user!=null){
+            model.addAttribute("user",user);
+            if (user.getRole()==Constant.patientRole){
+                PatientInfo patientInfo = patientInfoService.getPatientInfoByE(user.getEmail());
+                model.addAttribute("patientInfo",patientInfo);
+                model.addAttribute("toUserEmail",doctor_email);
+                model.addAttribute("toUserInfo",doctorInfoService.getDoctorInfoByE(doctor_email));
+                return "video-call-patient";
             }
         }
         return "redirect:/blank-page";

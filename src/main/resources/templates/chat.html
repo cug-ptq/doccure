@@ -182,6 +182,11 @@
 										<div class="user-name" id="userNameChat"></div>
 									</div>
 								</div>
+								<div class="chat-options">
+									<a id="video_start" href="">
+										<i class="material-icons">call_start</i>
+									</a>
+								</div>
 							</div>
 							<!--消息-->
 							<div id="divMessage">
@@ -332,11 +337,12 @@
 	var editorChat = new E("#editorChat");
 	initEditor(editorChat,"Type Something");
 	editorChat.create();
-	console.log(editorChat);
+
+	let video_start = $("#video_start");
 
 	//正在聊天的医生，点击<a>时，修改class
 	var nowTo = "";
-	// email selectID->"#email" 正在聊天的医生集合 email对应<a>的id，
+	// email selectID->"#email" 正在聊天的对象集合 email对应<a>的id，
 	// 点击select时，得到id用于改变class
 	var nowChatTo = new Map();
 	//现在显示DivMessage
@@ -352,7 +358,7 @@
 	let lastChatMessages = [[${lastChatMessages}]];//最后一条消息
 
 	var unReadEmailNum = new Map();//未读消息
-	var emailToMap = [[${emailDoctorMap}]];//对病人来说是全部医生信息
+	var emailToMap = [[${emailDoctorMap}]];//自己的聊天对象邮箱(不包含特殊字符)对应个人信息
 	var mySelfInfo = [[${Info}]];//本人信息
 	var isDoctor = [[${isDoctor}]];
 	var emailMessageEarly = new Map();//和对方的消息记录

@@ -3,8 +3,9 @@
  */
 function connectWebSocket(websocket) {
     //这里需要的路径需要配置相对应的路径
-    // const target = "ws://localhost:8888/chatWebSocket";
-    const target = "ws://110.40.154.137:8080/chatWebSocket";
+    // const target = "wss://localhost:8888/chatWebSocket";
+    // const target = "ws://110.40.154.137:8080/chatWebSocket";
+    const target = "wss://www.doccure.cn:8080/chatWebSocket";
     //判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
         if (websocket!=null){
@@ -77,6 +78,11 @@ function connectWebSocket(websocket) {
         else if (type === "other"){
             if (typeof (setOtherCharts) === "function"){
                 setOtherCharts(message);
+            }
+        }
+        else if (type === "video"){
+            if (typeof (videoMsgDeal) === "function"){
+                videoMsgDeal(message).then(r => console.log(r));
             }
         }
     }

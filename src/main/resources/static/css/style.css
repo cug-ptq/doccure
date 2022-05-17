@@ -6614,6 +6614,10 @@ html.menu-opened body {
 		margin-top: 10px;
 		position: inherit;
 	}
+	.start-call {
+		margin-top: 10px;
+		position: inherit;
+	}
 	.user-tabs .med-records {
 		min-width: 110px;
 	}

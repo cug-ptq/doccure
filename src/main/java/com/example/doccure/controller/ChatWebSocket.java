@@ -9,6 +9,7 @@ import com.example.doccure.service.UserService;
 import com.example.doccure.utils.ApplicationContextFactory;
 import com.example.doccure.utils.Constant;
 import com.example.doccure.utils.Msg;
+import com.example.doccure.utils.MsgVideo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -78,7 +79,6 @@ public class ChatWebSocket {
      */
     @OnMessage
     public void onMessage(String message) {
-
         //从客户端传过来的数据是json数据，所以这里使用jackson进行转换为chatMsg对象，
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode;
@@ -102,6 +102,9 @@ public class ChatWebSocket {
             }
             else if(type.equals(Constant.MSG_CHAT)){
                 chatService(jsonNode.get("message").asText());
+            }
+            else if (type.equals(Constant.MSG_VIDEO)){
+                videoService(type,message);
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -205,6 +208,65 @@ public class ChatWebSocket {
             if (toSession!=null){
                 toSession.getAsyncRemote().sendText(Msg.getMsgJsonType(type,message));
             }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void videoService(String type, String message){
+        ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println(message);
+        try {
+            Msg msg = objectMapper.readValue(message,Msg.class);
+            MsgVideo msgVideo = objectMapper.readValue(msg.getMessage(),MsgVideo.class);
+            Session toSession = emailSessionMap.get(msgVideo.getToUser());
+            MsgVideo msgVideo1 = new MsgVideo();
+            msgVideo1.setType(msgVideo.getType());
+            //呼叫的用户不在线
+            if(toSession == null){
+                toSession = session;
+                msgVideo1.setType("call_back");
+                msgVideo1.setFromUser("系统消息");
+                msgVideo1.setMsg("Sorry，呼叫的用户不在线！");
+                toSession.getAsyncRemote().sendText(Msg.getMsgJsonType(type,MsgVideo.getJsonString(msgVideo1)));
+                return;
+            }
+            //对方挂断
+            if ("hangup".equals(msgVideo.getType())) {
+                msgVideo1.setFromUser(msgVideo.getFromUser());
+                msgVideo1.setMsg("对方挂断！");
+            }
+
+            //视频通话请求
+            if ("call_start".equals(msgVideo.getType())) {
+                msgVideo1.setFromUser(msgVideo.getFromUser());
+                msgVideo1.setMsg("1");
+            }
+
+            //视频通话请求回应
+            if ("call_back".equals(msgVideo.getType())) {
+                msgVideo1.setFromUser(msgVideo.getToUser());
+                msgVideo1.setMsg(msgVideo.getMsg());
+            }
+
+            //offer
+            if ("offer".equals(msgVideo.getType())) {
+                msgVideo1.setFromUser(msgVideo.getToUser());
+                msgVideo1.setSdp(msgVideo.getSdp());
+            }
+
+            //answer
+            if ("answer".equals(msgVideo.getType())) {
+                msgVideo1.setFromUser(msgVideo.getToUser());
+                msgVideo1.setSdp(msgVideo.getSdp());
+            }
+
+            //ice
+            if ("_ice".equals(msgVideo.getType())) {
+                msgVideo1.setFromUser(msgVideo.getToUser());
+                msgVideo1.setIceCandidate(msgVideo.getIceCandidate());
+            }
+            toSession.getAsyncRemote().sendText(Msg.getMsgJsonType(type,MsgVideo.getJsonString(msgVideo1)));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

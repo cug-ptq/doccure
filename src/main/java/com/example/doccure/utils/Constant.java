@@ -45,6 +45,7 @@ public class Constant {
     public static String MSG_ASSESS = "assess";
     public static String MSG_EXAM = "exam";
     public static String MSG_CHAT = "chat";
+    public static String MSG_VIDEO = "video";
     /**
      * 处理类型->List
      * appoint_resultNoDeal;
