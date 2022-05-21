@@ -11,6 +11,7 @@ import com.example.doccure.utils.Constant;
 import com.example.doccure.utils.Msg;
 import com.example.doccure.utils.MsgVideo;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ApplicationContext;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpSession;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -198,7 +200,6 @@ public class ChatWebSocket {
             }
         }
     }
-
     private void visitService(String type, String message) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -213,9 +214,8 @@ public class ChatWebSocket {
         }
     }
 
-    private void videoService(String type, String message){
+    private void videoService(String type,String message){
         ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println(message);
         try {
             Msg msg = objectMapper.readValue(message,Msg.class);
             MsgVideo msgVideo = objectMapper.readValue(msg.getMessage(),MsgVideo.class);
@@ -228,11 +228,15 @@ public class ChatWebSocket {
                 msgVideo1.setType("call_back");
                 msgVideo1.setFromUser("系统消息");
                 msgVideo1.setMsg("Sorry，呼叫的用户不在线！");
-                toSession.getAsyncRemote().sendText(Msg.getMsgJsonType(type,MsgVideo.getJsonString(msgVideo1)));
+                try {
+                    toSession.getBasicRemote().sendText(Msg.getMsgJsonType(type,objectMapper.writeValueAsString(msgVideo1)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return;
             }
             //对方挂断
-            if ("hangup".equals(msgVideo.getType())) {
+            if ("call_end".equals(msgVideo.getType())) {
                 msgVideo1.setFromUser(msgVideo.getFromUser());
                 msgVideo1.setMsg("对方挂断！");
             }
@@ -266,10 +270,106 @@ public class ChatWebSocket {
                 msgVideo1.setFromUser(msgVideo.getToUser());
                 msgVideo1.setIceCandidate(msgVideo.getIceCandidate());
             }
-            toSession.getAsyncRemote().sendText(Msg.getMsgJsonType(type,MsgVideo.getJsonString(msgVideo1)));
+            synchronized(toSession){
+                try {
+                    toSession.getBasicRemote().sendText(Msg.getMsgJsonType(type,objectMapper.writeValueAsString(msgVideo1)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+//        try{
+//            //jackson
+//            ObjectMapper mapper = new ObjectMapper();
+//            mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+//            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//
+//            //JSON字符串转 HashMap
+//            HashMap hashMap = mapper.readValue(message, HashMap.class);
+//
+//            //消息类型
+//            String type = (String) hashMap.get("type");
+//            //to user
+//            String toUser = (String) hashMap.get("toUser");
+//            Session toUserSession = emailSessionMap.get(toUser);
+//            String fromUser = (String) hashMap.get("fromUser");
+//
+//            //msg
+//            String msg = (String) hashMap.get("msg");
+//
+//            //sdp
+//            String sdp = (String) hashMap.get("sdp");
+//
+//            //ice
+//            Map iceCandidate  = (Map) hashMap.get("iceCandidate");
+//
+//            HashMap<String, Object> map = new HashMap<>();
+//            map.put("type",type);
+//
+//            //呼叫的用户不在线
+//            if(toUserSession == null){
+//                toUserSession = session;
+//                map.put("type","call_back");
+//                map.put("fromUser","系统消息");
+//                map.put("msg","Sorry，呼叫的用户不在线！");
+//                synchronized(toUserSession){
+//                    try {
+//                        toUserSession.getBasicRemote().sendText(mapper.writeValueAsString(map));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                return;
+//            }
+//
+//            //对方挂断
+//            if ("hangup".equals(type)) {
+//                map.put("fromUser",fromUser);
+//                map.put("msg","对方挂断！");
+//            }
+//
+//            //视频通话请求
+//            if ("call_start".equals(type)) {
+//                map.put("fromUser",fromUser);
+//                map.put("msg","1");
+//            }
+//
+//            //视频通话请求回应
+//            if ("call_back".equals(type)) {
+//                map.put("fromUser",toUser);
+//                map.put("msg",msg);
+//            }
+//
+//            //offer
+//            if ("offer".equals(type)) {
+//                map.put("fromUser",toUser);
+//                map.put("sdp",sdp);
+//            }
+//
+//            //answer
+//            if ("answer".equals(type)) {
+//                map.put("fromUser",toUser);
+//                map.put("sdp",sdp);
+//            }
+//
+//            //ice
+//            if ("_ice".equals(type)) {
+//                map.put("fromUser",toUser);
+//                map.put("iceCandidate",iceCandidate);
+//            }
+//
+//            synchronized (toUserSession){
+//                try {
+//                    toUserSession.getBasicRemote().sendText(mapper.writeValueAsString(map));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
     }
 
 

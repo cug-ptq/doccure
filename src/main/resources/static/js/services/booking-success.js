@@ -26,23 +26,23 @@ function addFailAppoint(appointment,doctorInfo) {
     let appoint_time = appointment.appoint_time.split("T");
     let date = appoint_time[0];
     let time = appoint_time[1].substr(0,8);
-    let failHtml = '<tr>\n' +
-        '                              <td id="appoint'+ appointment.id +'">\n' +
-        '                                <h2 class="table-avatar">\n' +
-        '                                  <a href="/doctor-profile?email='+ appointment.doctor_email +'" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="'+ doctorInfo.image_url +'" alt="User Image"></a>\n' +
-        '                                  <a href="/doctor-profile?email='+ appointment.doctor_email +'">'+ doctorInfo.username +'</a>\n' +
-        '                                </h2>\n' +
-        '                              </td>\n' +
-        '                              <td>'+ date +'<span class="d-block text-info">'+ time +'</span></td>\n' +
-        '                              <td>'+ appointment.appoint_type +'</td>\n' +
-        '                              <td class="text-right">\n' +
-        '                                <div class="table-action">\n' +
-        '                                  <a onclick="showDetails_BookingFail(this)" id="'+ appointment.id +'" class="btn btn-sm bg-info-light"  data-toggle="modal" data-target="#apt_details">\n' +
-        '                                    <i class="far fa-eye"></i> View\n' +
-        '                                  </a>\n' +
-        '                                </div>\n' +
-        '                              </td>\n' +
-        '                            </tr>';
+    let failHtml = '<tr id="appoint'+ appointment.id +'">\n' +
+        '  <td>\n' +
+        '    <h2 class="table-avatar">\n' +
+        '      <a href="/doctor-profile?email='+ appointment.doctor_email +'" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="'+ doctorInfo.image_url +'" alt="User Image"></a>\n' +
+        '      <a href="/doctor-profile?email='+ appointment.doctor_email +'">'+ doctorInfo.username +'</a>\n' +
+        '    </h2>\n' +
+        '  </td>\n' +
+        '  <td>'+ date +'<span class="d-block text-info">'+ time +'</span></td>\n' +
+        '  <td>'+ appointment.appoint_type +'</td>\n' +
+        '  <td class="text-right">\n' +
+        '    <div class="table-action">\n' +
+        '      <a onclick="showDetails_BookingFail(this)" id="'+ appointment.id +'" class="btn btn-sm bg-info-light"  data-toggle="modal" data-target="#apt_details">\n' +
+        '        <i class="far fa-eye"></i> View\n' +
+        '      </a>\n' +
+        '    </div>\n' +
+        '  </td>\n' +
+        '</tr>';
     $("#aptFail").append(failHtml);
 }
 

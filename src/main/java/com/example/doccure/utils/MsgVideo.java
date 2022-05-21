@@ -1,42 +1,31 @@
 package com.example.doccure.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class MsgVideo {
+    private String msg;
     private String type;
     private String toUser;
     private String fromUser;
-    private String msg;
-    private String sdp;
     private String iceCandidate;
+    private String sdp;
 
     public MsgVideo() {
     }
 
-    public MsgVideo(String type, String toUser, String fromUser, String msg,String sdp,String iceCandidate) {
+    public MsgVideo(String msg, String type, String toUser, String fromUser, String iceCandidate,String sdp) {
+        this.msg = msg;
         this.type = type;
         this.toUser = toUser;
         this.fromUser = fromUser;
-        this.msg = msg;
+        this.iceCandidate = iceCandidate;
         this.sdp = sdp;
-        this.iceCandidate = iceCandidate;
     }
 
-    public String getIceCandidate() {
-        return iceCandidate;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setIceCandidate(String iceCandidate) {
-        this.iceCandidate = iceCandidate;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public String getSdp() {
@@ -45,6 +34,14 @@ public class MsgVideo {
 
     public void setSdp(String sdp) {
         this.sdp = sdp;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getToUser() {
@@ -63,33 +60,23 @@ public class MsgVideo {
         this.fromUser = fromUser;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getIceCandidate() {
+        return iceCandidate;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public static String getJsonString(MsgVideo msgVideo){
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.writeValueAsString(msgVideo);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return "";
+    public void setIceCandidate(String iceCandidate) {
+        this.iceCandidate = iceCandidate;
     }
 
     @Override
     public String toString() {
         return "MsgVideo{" +
-                "type='" + type + '\'' +
+                "msg='" + msg + '\'' +
+                ", type='" + type + '\'' +
                 ", toUser='" + toUser + '\'' +
                 ", fromUser='" + fromUser + '\'' +
-                ", msg='" + msg + '\'' +
-                ", sdp='" + sdp + '\'' +
                 ", iceCandidate='" + iceCandidate + '\'' +
+                ", sdp='" + sdp + '\'' +
                 '}';
     }
 }

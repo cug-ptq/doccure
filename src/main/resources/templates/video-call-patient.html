@@ -24,12 +24,6 @@
 
 </head>
 <style>
-  /*.user-video {*/
-  /*	width: 800px;*/
-  /*	height: 600px;*/
-  /*	border: 1px solid black;*/
-  /*	overflow: hidden;*/
-  /*}*/
 
 </style>
 <body class="call-page">
@@ -175,13 +169,13 @@
                 <!-- Call Contents -->
                 <div class="call-contents">
                   <div class="call-content-wrap">
-                    <div class="user-video">
-                      <video class="user-video" id="user_video"></video>
+                    <div>
+                      <video id="user_video" playsinline autoplay></video>
                     </div>
                     <div class="my-video">
                       <ul>
                         <li>
-                          <video id="my_video" class="img-fluid"></video>
+                          <video class="img-fluid" id="my_video" playsinline autoplay muted></video>
                         </li>
                       </ul>
                     </div>
@@ -327,8 +321,8 @@
           <div class="call-wrapper">
             <div class="call-inner">
               <div class="call-user">
-                <img class="call-avatar" th:src="@{/img/doctors/doctor-thumb-02.jpg}" alt="User Image">
-                <h4>Darren Elder</h4>
+                <img class="call-avatar" th:src="${toUserInfo.getImage_url()}" alt="User Image">
+                <h4 th:text="${toUserInfo.getUsername()}"></h4>
                 <span>Calling ...</span>
               </div>
               <div class="call-items">
@@ -355,8 +349,8 @@
           <div class="call-wrapper">
             <div class="call-inner">
               <div class="call-user">
-                <img class="call-avatar" th:src="@{/img/doctors/doctor-thumb-02.jpg}" alt="User Image">
-                <h4>Darren Elder</h4>
+                <img class="call-avatar" th:src="${toUserInfo.getImage_url()}" alt="User Image">
+                <h4 th:text="${toUserInfo.getUsername()}"></h4>
                 <span>Calling ...</span>
               </div>
               <div class="call-items">
@@ -383,7 +377,6 @@
 <!-- Custom JS -->
 <script th:src="@{/js/script.js}"></script>
 <script th:src="@{/js/services/websocket.js}"></script>
-<script th:src="@{/js/services/video.js}"></script>
 <script th:inline="javascript">
   Notiflix.Notify.Init();
   let localVideo = document.getElementById('my_video');
@@ -397,5 +390,6 @@
   let websocket = null;
   websocket = connectWebSocket(websocket);
 </script>
+<script th:src="@{/js/services/video.js}"></script>
 </body>
 </html>

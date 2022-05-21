@@ -459,7 +459,6 @@ public class PageController {
     @RequestMapping("/video-call-patient") //未完成
     public String videoCallPatient(Model model, HttpServletRequest request, String doctor_email){
         User user = (User) request.getSession().getAttribute("user");
-        System.out.println(doctor_email);
         if (user!=null){
             model.addAttribute("user",user);
             if (user.getRole()==Constant.patientRole){

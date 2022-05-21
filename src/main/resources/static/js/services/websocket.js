@@ -80,9 +80,10 @@ function connectWebSocket(websocket) {
                 setOtherCharts(message);
             }
         }
-        else if (type === "video"){
+        else{
             if (typeof (videoMsgDeal) === "function"){
-                videoMsgDeal(message).then(r => console.log(r));
+                // console.log(message);
+                videoMsgDeal(message).then(r => console.log());
             }
         }
     }

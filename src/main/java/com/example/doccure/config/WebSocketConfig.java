@@ -16,7 +16,10 @@ public class WebSocketConfig extends ServerEndpointConfig.Configurator {
                                 HandshakeRequest handshakeRequest, HandshakeResponse handshakeResponse){
         //获取httpsession
         HttpSession session = (HttpSession) handshakeRequest.getHttpSession();
-        serverEndpointConfig.getUserProperties().put(HttpSession.class.getName(), session);
+        if (session!=null){
+            serverEndpointConfig.getUserProperties().put(HttpSession.class.getName(), session);
+        }
+        super.modifyHandshake(serverEndpointConfig,handshakeRequest,handshakeResponse);
     }
 
     @Bean

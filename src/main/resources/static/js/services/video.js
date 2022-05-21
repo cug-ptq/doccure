@@ -1,4 +1,9 @@
-
+let options = {
+    'OfferToReceiveAudio': true,
+    'OfferToReceiveVideo': true,
+    "iceRestart":true,
+    "voiceActivityDetection": true
+};
 $("#receive").click(function (){
     is_video = true;
     dealCall();
@@ -30,7 +35,7 @@ ButtonFunInit();
 
 async function videoMsgDeal(message) {
     message = JSON.parse(message);
-    if (message.type === 'call_start') {
+    if (message.type === 'call_start') {  //接收方
         is_video = false;
         let call_receive_div = $("#call_receive_div");
         $(call_receive_div).modal("show");
@@ -42,23 +47,26 @@ async function videoMsgDeal(message) {
         }, 10000);
     }
 
-    if (message.type === 'call_back') {
+    if (message.type === 'call_back') { //发起方
         if (parseInt(message.msg) === 1) {
             //创建本地视频并发送offer
-            $("#video_start").modal("hide");
-            let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true})
+            console.log("我得到call_back")
+            $("#call_start_div").modal("hide");
+            let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
             localVideo.srcObject = stream;
+            localVideo.play();
             stream.getTracks().forEach(track => {
                 peer.addTrack(track, stream);
             });
 
-            let offer = await peer.createOffer();
+            let offer = await peer.createOffer(options);
             await peer.setLocalDescription(offer);
 
             let newOffer = offer.toJSON();
             newOffer["fromUser"] = UserInfo.email;
             newOffer["toUser"] = toUserEmail;
             let to_msg = JSON.stringify(newOffer);
+            console.log("我发送offer");
             websocket.send(JSON.stringify({"type":"video","message":to_msg}));
         } else if (parseInt(message.msg) === 0) {
             Notiflix.Notify.Info(toUserInfo.username + "拒绝视频通话");
@@ -67,37 +75,37 @@ async function videoMsgDeal(message) {
             Notiflix.Notify.Info(message.msg);
             document.getElementById('call_end').click();
         }
-        $("#call_start_div").modal("hide");
+        $('#call_start_div').modal("hide");
         return;
     }
 
-    if (message.type === 'offer') {
+    if (message.type === 'offer') { //接收方
+        let sdp = message.sdp;
+        let type = message.type;
+        await peer.setRemoteDescription(new RTCSessionDescription({type, sdp}));
+
         let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+        console.log("我得到offer")
         localVideo.srcObject = stream;
         stream.getTracks().forEach(track => {
             peer.addTrack(track, stream);
         });
 
 
-        let sdp = message.sdp.replace(/\r/g,"\\r");
-        let type = message.type;
-        await peer.setRemoteDescription(new RTCSessionDescription({type, sdp}));
-        let answer = await peer.createAnswer();
+        let answer = await peer.createAnswer(options);
         let newAnswer = answer.toJSON();
-
         newAnswer["fromUser"] = UserInfo.email;
         newAnswer["toUser"] = toUserEmail;
 
         let to_msg = JSON.stringify(newAnswer);
-        console.log(newAnswer);
         websocket.send(JSON.stringify({"type":"video","message":to_msg}));
+        console.log("我发送answer")
         await peer.setLocalDescription(answer);
         return;
     }
 
-    if (message.type === 'answer') {
+    if (message.type === 'answer') {  //发起方
         let sdp = message.sdp;
-    // .replace(/\r/g,"\\r");
         let type = message.type;
         await peer.setRemoteDescription(new RTCSessionDescription({type, sdp}));
         return;
@@ -111,7 +119,11 @@ async function videoMsgDeal(message) {
 /* WebRTC */
 function WebRTCInit(){
     let pc_config = {
-        "iceServers": [{"urls": ['stun:stun.xten.com:3478']}]
+        "iceServers": [{
+            urls: "turn:www.doccure.cn:3478",
+            credential: "ptq",
+            username: "ptq123456"
+        }]
     };
     peer = new RTCPeerConnection(pc_config);
 
@@ -132,6 +144,9 @@ function WebRTCInit(){
     peer.ontrack = function (e) {
         if (e && e.streams) {
             remoteVideo.srcObject = e.streams[0];
+            setTimeout(function () {
+                remoteVideo.play();
+            },3000);
         }
     };
 }
@@ -150,6 +165,7 @@ function ButtonFunInit(){
         if(peer == null){
             WebRTCInit();
         }
+
         let to_msg = JSON.stringify({
             type:"call_start",
             fromUser:UserInfo.email,
