@@ -169,7 +169,7 @@
                 <!-- Call Contents -->
                 <div class="call-contents">
                   <div class="call-content-wrap">
-                    <div>
+                    <div class="user-video">
                       <video id="user_video" playsinline autoplay></video>
                     </div>
                     <div class="my-video">
@@ -186,7 +186,7 @@
                 <!-- Call Footer -->
                 <div class="call-footer">
                   <div class="call-icons">
-                    <span class="call-duration" id="time">00:59</span>
+                    <span class="call-duration" id="time"></span>
                     <ul class="call-items">
                       <li class="call-item">
                         <a href="" title="Enable Video" data-placement="top" data-toggle="tab">
@@ -383,7 +383,7 @@
   let remoteVideo = document.getElementById('user_video');
   let peer = null;
   let is_video = false;
-
+  let seconds = 0;
   let UserInfo = [[${patientInfo}]];
   let toUserEmail = [[${toUserEmail}]];
   let toUserInfo = [[${toUserInfo}]];

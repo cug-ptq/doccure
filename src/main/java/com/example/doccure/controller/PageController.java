@@ -528,14 +528,6 @@ public class PageController {
         User user = (User) request.getSession().getAttribute("user");
         if (user!=null){
             model.addAttribute("user",user);
-            String image_url;
-            if (user.getRole()==Constant.patientRole){
-                image_url = patientInfoService.getPatientInfoByE(user.getEmail()).getImage_url();
-            }
-            else {
-                image_url = doctorInfoService.getDoctorInfoByE(user.getEmail()).getImage_url();
-            }
-            model.addAttribute("userImgUrl",image_url);
             model.addAttribute("isLogin",true);
         }
         else {

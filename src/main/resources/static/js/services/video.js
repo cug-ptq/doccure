@@ -4,6 +4,7 @@ let options = {
     "iceRestart":true,
     "voiceActivityDetection": true
 };
+
 $("#receive").click(function (){
     is_video = true;
     dealCall();
@@ -68,14 +69,16 @@ async function videoMsgDeal(message) {
             let to_msg = JSON.stringify(newOffer);
             console.log("我发送offer");
             websocket.send(JSON.stringify({"type":"video","message":to_msg}));
+            $('#call_start_div').modal("hide");
         } else if (parseInt(message.msg) === 0) {
             Notiflix.Notify.Info(toUserInfo.username + "拒绝视频通话");
-            document.getElementById('call_end').click();
+            callEnd();
+            $('#call_start_div').modal("hide");
         } else {
             Notiflix.Notify.Info(message.msg);
-            document.getElementById('call_end').click();
+            callEnd();
+            $('#call_start_div').modal("hide");
         }
-        $('#call_start_div').modal("hide");
         return;
     }
 
@@ -84,7 +87,7 @@ async function videoMsgDeal(message) {
         let type = message.type;
         await peer.setRemoteDescription(new RTCSessionDescription({type, sdp}));
 
-        let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+        let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true});
         console.log("我得到offer")
         localVideo.srcObject = stream;
         stream.getTracks().forEach(track => {
@@ -119,11 +122,10 @@ async function videoMsgDeal(message) {
 /* WebRTC */
 function WebRTCInit(){
     let pc_config = {
-        "iceServers": [{
-            urls: "turn:www.doccure.cn:3478",
-            credential: "ptq",
-            username: "ptq123456"
-        }]
+        "iceServers": [
+            {urls:'stun:stun4.l.google.com:19302'},
+            {urls: "turn:www.doccure.cn:3478", credential: "ptq", username: "ptq123456"}
+        ]
     };
     peer = new RTCPeerConnection(pc_config);
 
@@ -176,46 +178,68 @@ function ButtonFunInit(){
 
     //挂断
     document.getElementById('call_end').onclick = function (e){
-        if(localVideo.srcObject){
-            const videoTracks = localVideo.srcObject.getVideoTracks();
-            videoTracks.forEach(videoTrack => {
-                videoTrack.stop();
-                localVideo.srcObject.removeTrack(videoTrack);
-            });
-        }
-
-        if(remoteVideo.srcObject){
-            const videoTracks = remoteVideo.srcObject.getVideoTracks();
-            videoTracks.forEach(videoTrack => {
-                videoTrack.stop();
-                remoteVideo.srcObject.removeTrack(videoTrack);
-            });
-
-            //挂断同时，通知对方
-            let to_msg = JSON.stringify({
-                type:"call_end",
-                fromUser:UserInfo.email,
-                toUser:toUserEmail,
-            })
-
-            websocket.send(JSON.stringify({"type":"video","message":to_msg}));
-        }
-
-        if(peer){
-            peer.ontrack = null;
-            peer.onremovetrack = null;
-            peer.onremovestream = null;
-            peer.onicecandidate = null;
-            peer.oniceconnectionstatechange = null;
-            peer.onsignalingstatechange = null;
-            peer.onicegatheringstatechange = null;
-            peer.onnegotiationneeded = null;
-
-            peer.close();
-            peer = null;
-        }
-
-        localVideo.srcObject = null;
-        remoteVideo.srcObject = null;
+        callEnd();
     }
 }
+
+function callEnd() {
+    if(localVideo.srcObject){
+        const videoTracks = localVideo.srcObject.getVideoTracks();
+        videoTracks.forEach(videoTrack => {
+            videoTrack.stop();
+            localVideo.srcObject.removeTrack(videoTrack);
+        });
+    }
+
+    if(remoteVideo.srcObject){
+        const videoTracks = remoteVideo.srcObject.getVideoTracks();
+        videoTracks.forEach(videoTrack => {
+            videoTrack.stop();
+            remoteVideo.srcObject.removeTrack(videoTrack);
+        });
+
+        //挂断同时，通知对方
+        let to_msg = JSON.stringify({
+            type:"call_end",
+            fromUser:UserInfo.email,
+            toUser:toUserEmail,
+        })
+
+        websocket.send(JSON.stringify({"type":"video","message":to_msg}));
+    }
+
+    if(peer){
+        peer.ontrack = null;
+        peer.onremovetrack = null;
+        peer.onremovestream = null;
+        peer.onicecandidate = null;
+        peer.oniceconnectionstatechange = null;
+        peer.onsignalingstatechange = null;
+        peer.onicegatheringstatechange = null;
+        peer.onnegotiationneeded = null;
+        peer.close();
+        peer = null;
+    }
+    // seconds = 0;
+    localVideo.srcObject = null;
+    remoteVideo.srcObject = null;
+}
+
+// setInterval(function () {
+//     if (remoteVideo.srcObject!=null){
+//         seconds++;
+//         dealSeconds(seconds);
+//     }
+//
+//     }, 1000);
+// function dealSeconds(seconds){
+//     //总秒数
+//     //seconds=seconds/1000;
+//     //得到小时
+//     let hour = (seconds/3600);
+//     if (hour.toString().length === 1){ hour = "0" + hour.toString();}
+//     let r = seconds%3600;
+//     let m = r/60; if (m.toString().length === 1){ m = "0" + m.toString();}
+//     let s = r%60; if (s.toString().length === 1){ s = "0" + s.toString();}
+//     $("#time").text(hour +":"+ m +":"+ s);
+// }

@@ -34,12 +34,13 @@ $("#submitBook").click(function (){
     }
 });
 function booking(date,time,appointType) {
+    let other_info = $("#other_info").val();
     $.ajax({
         url:"patient/booking",
         type:"post",
         dataType:"json",
-        data:{"appointInfo":JSON.stringify({"date":date,"time":time,
-                "appointType":appointType,"doctor_email":doctorInfo.email})},
+        data:{"appointInfo":JSON.stringify({"appoint_time":date+" "+time,
+                "appoint_type":appointType,"doctor_email":doctorInfo.email,"appoint_content":other_info})},
         success:function (data){
             if (data.code === -1){
                 Notiflix.Notify.Failure(data.message);

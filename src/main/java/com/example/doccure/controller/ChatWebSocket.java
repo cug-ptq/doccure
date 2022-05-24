@@ -108,6 +108,9 @@ public class ChatWebSocket {
             else if (type.equals(Constant.MSG_VIDEO)){
                 videoService(type,message);
             }
+//            else {
+//                videoService(message);
+//            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

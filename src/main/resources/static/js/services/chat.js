@@ -80,7 +80,6 @@ function clickTo(obj) {
     //如果是第一次点击
     if (isFirstClick.get(obj.id)===0){
         //设置为已经点击
-        console.log(obj.id);
         isFirstClick.set(obj.id,1);
         firstClickChat(obj.id);
     }
@@ -121,7 +120,6 @@ function showChatToList(ToInfos,lastChatMessages,chatListInfos) {
         isFirstClick.set(filterEmail,0);
         unReadEmailNum.set(filterEmail,chatListInfos[i].unread_num);
         emailMessageEarly.set(ToInfos[i].email,"");
-        console.log(ToInfos[i].email);
         $("#"+filterEmail).attr("value",0);
         addChatBody(filterEmail);
         if (isLast){
@@ -131,7 +129,6 @@ function showChatToList(ToInfos,lastChatMessages,chatListInfos) {
             addToInList(ToInfos[i],"",0);
         }
     }
-    console.log(unReadEmailNum);
 }
 
 
@@ -162,7 +159,7 @@ function addToInList(ToInfo,lastMessage,unread) {
         '             <div class="user-last-chat" id="lastMsg'+emailFilter(ToInfo.email)+'">'+ content +'</div>\n' +
         '           </div>\n' +
         '           <div>\n' +
-        '             <div class="last-chat-time block">'+time+'</div>\n' +
+        '             <div class="last-chat-time block" id="time'+emailFilter(ToInfo.email)+'">'+time+'</div>\n' +
         '             <div class="badge badge-success badge-pill" id="unread'+ emailFilter(ToInfo.email) +'">'+unread+'</div>\n' +
         '           </div>\n' +
         '         </div>\n' +
@@ -265,7 +262,6 @@ function firstClickChat(to_email) {
             }
             //email ->Map(time,message)
             emailMessageEarly.set(emailToMap[to_email].email,messageEarly);
-            console.log(emailMessageEarly);
             $(nowMessageBody).prepend(new_html);
         }
     });
@@ -305,7 +301,6 @@ function addScrollListener(to_email) {
                    else {
                        days=0;
                        emailMessageEarly.set(emailToMap[to_email].email,messageEarly);
-                       console.log(emailMessageEarly);
                        $(nowMessageBody).prepend(new_html);
                    }
                }
@@ -326,25 +321,26 @@ $(sendMessage).click(function (){
 
     let message = {"from_email":mySelfInfo.email,"to_email":to_email,"content":content,
         "time":nowTime.format()};
-    console.log(websocket);
+
     websocket.send(JSON.stringify({"type":"chat","message":JSON.stringify(message)}));
     //设置第一条消息
     let lastMsg = "#lastMsg" + emailFilter(to_email);
-    console.log(lastMsg);
     $(lastMsg).html("").html(content);
+    //设置时间
+    let time = "#time" +emailFilter(to_email);
+    $(time).text(timeDealShow(nowTime.format()));
 });
+
+
 //receive
 function insertMessage(receive_message) {
     let message = JSON.parse(receive_message);
-    console.log(message);
     //如果对方是新聊天，加入新的email->Message
     let isNew = false;let from_email = "";
-    console.log(emailMessageEarly.has(message.from_email));
     if (!emailMessageEarly.has(message.from_email)){//是新聊天
         unReadEmailNum.set(message.from_email,1);
         from_email = message.from_email;
         isNew = true;
-        console.log(isNew,from_email);
     }
     else {
         //否则判断对方是否是自己正在聊天的人
@@ -361,21 +357,21 @@ function insertMessage(receive_message) {
             // 增加未读数
             to_email = emailFilter(message.from_email);
             let unread_num = unReadEmailNum.get(to_email);
-            console.log(unread_num);
             unReadEmailNum.set(to_email,unread_num+1);
             let unread = "#unread" + to_email;
             $(unread).text(unread_num+1);
             //body添加
             let toMessageBody = "#messageBody" + to_email;
-            console.log(toMessageBody);
             if (isFirstClick.get(to_email)===1){//如果已经点击过，加入body，否则不用
                 $(toMessageBody).append(addMessage(message.content,false,timeDealShow(message.time)))
             }
         }
         //设置第一条消息
         let lastMsg = "#lastMsg" + to_email;
-        console.log(lastMsg);
         $(lastMsg).html("").html(message.content);
+        //设置时间
+        let time = "#time" + emailFilter(to_email);
+        $(time).text(timeDealShow(message.time));
     }
     if (isNew){//如果是新聊天,得到基本信息
         let urlInfo = "";

@@ -112,13 +112,13 @@
 						<li class="nav-item dropdown has-arrow logged-item" id="userMenu">
 							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
 								<span class="user-img">
-                                    <img class="rounded-circle" th:src="${userImgUrl}" width="31" alt="Darren Elder">
+                                    <img class="rounded-circle" th:src="${doctorInfo.getImage_url()}" width="31" alt="Darren Elder">
                                 </span>
 							</a>
 							<div class="dropdown-menu dropdown-menu-right">
 								<div class="user-header">
 									<div class="avatar avatar-sm">
-										<img th:src="${userImgUrl}" alt="User Image" class="avatar-img rounded-circle">
+										<img th:src="${doctorInfo.getImage_url()}" alt="User Image" class="avatar-img rounded-circle">
 									</div>
 									<div class="user-text">
 										<h6 th:text="${user.username}"></h6>
@@ -163,12 +163,12 @@
 							<div class="doctor-widget">
 								<div class="doc-info-left">
 									<div class="doctor-img">
-										<img th:src="@{/img/doctors/doctor-thumb-02.jpg}" class="img-fluid" alt="User Image">
+										<img th:src="${doctorInfo.getImage_url()}" class="img-fluid" alt="User Image">
 									</div>
 									<div class="doc-info-cont">
 										<h4 class="doc-name" th:text="${doctorInfo.username}"></h4>
 										<p class="doc-speciality" th:text="${edu}"></p>
-										<p class="doc-department"><img th:src="@{/img/specialities/specialities-05.png}" class="img-fluid" alt="Speciality">Dentist</p>
+										<p class="doc-department"><img th:src="${doctorInfo.getImage_url()}" class="img-fluid" alt="Speciality">Dentist</p>
 										<div class="rating">
 											<i class="fas fa-star filled"></i>
 											<i class="fas fa-star filled"></i>

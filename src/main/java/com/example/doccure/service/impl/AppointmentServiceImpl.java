@@ -109,20 +109,18 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Msg book(User user, String appointInfo) {
         try {
             objectMapper.setDateFormat(new SimpleDateFormat(Constant.timePatternTimeStamp));
-            JsonNode jsonNode = objectMapper.readTree(appointInfo);
-            DoctorInfo doctorInfo = doctorInfoService.getDoctorInfoByE(jsonNode.get("doctor_email").asText());
-            String date = jsonNode.get("date").asText();String time = jsonNode.get("time").asText();
-            String appointType = jsonNode.get("appointType").asText();
+            Appointment appointment = objectMapper.readValue(appointInfo,Appointment.class);
+            DoctorInfo doctorInfo = doctorInfoService.getDoctorInfoByE(appointment.getDoctor_email());
 
             //是否已经签约该医生
             if (userService.getDoctorPatientByDP_E(doctorInfo.getEmail(),user.getEmail())!=null
-                    && appointType.equals(Constant.appoint_typeSign)){
+                    && appointment.getAppoint_type().equals(Constant.appoint_typeSign)){
                 return new Msg(-1,"","您已经签约过");
             }
 
-            Appointment appointment = new Appointment(doctorInfo.getEmail(),user.getEmail(),"",
-                    ServiceUtil.timeStringToTimeStamp(date+" "+time,Constant.timePatternTimeStamp),
-                    Constant.appoint_resultNoDeal,appointType,Constant.read);
+            appointment.setIs_read(Constant.read);
+            appointment.setPatient_email(user.getEmail());
+            appointment.setAppoint_result(Constant.appoint_resultNoDeal);
             appointmentDao.insert(appointment);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

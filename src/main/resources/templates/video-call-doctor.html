@@ -168,7 +168,7 @@
 										<!-- Call Contents -->
 										<div class="call-contents">
 											<div class="call-content-wrap">
-												<div>
+												<div class="user-video">
 													<video id="user_video" playsinline autoplay></video>
 												</div>
 												<div class="my-video">
@@ -185,7 +185,7 @@
 										<!-- Call Footer -->
 										<div class="call-footer">
 											<div class="call-icons">
-												<span class="call-duration" id="time">00:59</span>
+												<span class="call-duration" id="time"></span>
 												<ul class="call-items">
 													<li class="call-item">
 														<a href="" title="Enable Video" data-placement="top" data-toggle="tab">
@@ -320,8 +320,8 @@
 							<div class="call-wrapper">
 								<div class="call-inner">
 									<div class="call-user">
-										<img class="call-avatar" th:src="@{/img/doctors/doctor-thumb-02.jpg}" alt="User Image">
-										<h4>Darren Elder</h4>
+										<img class="call-avatar" th:src="${toUserInfo.getImage_url()}" alt="User Image">
+										<h4 th:text="${toUserInfo.getUsername()}"></h4>
 										<span>Calling ...</span>
 									</div>
 									<div class="call-items">
@@ -409,7 +409,7 @@
 			let remoteVideo = document.getElementById('user_video');
 			let peer = null;
 			let is_video = false;
-
+			let seconds = 0;
 			let UserInfo = [[${doctorInfo}]];
 			let toUserEmail = [[${toUserEmail}]];
 			let toUserInfo = [[${toUserInfo}]];

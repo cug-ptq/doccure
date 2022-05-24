@@ -29,10 +29,10 @@ function connectWebSocket(websocket) {
     //接收到消息的回调方法
     websocket.onmessage = function (event) {
         let obj = JSON.parse(event.data);
-        let type = obj["type"];let message = obj["message"];
+        let type = obj["type"];
         if (type === "chat"){
             if (typeof (insertMessage) === "function"){
-                insertMessage(message);
+                insertMessage(obj["message"]);
             }
             else {
                 Notiflix.Notify.Info("有聊天信息!");
@@ -40,7 +40,7 @@ function connectWebSocket(websocket) {
         }
         else if (type === "assess"){
             if (typeof (receiveAssessMsg) === "function"){
-                receiveAssessMsg(message);
+                receiveAssessMsg(obj["message"]);
             }
             else {
                 Notiflix.Notify.Info("有评估信息!");
@@ -48,7 +48,7 @@ function connectWebSocket(websocket) {
         }
         else if (type === "exam"){
             if (typeof (receiveExamMsg) === "function"){
-                receiveExamMsg(message);
+                receiveExamMsg(obj["message"]);
             }
             else {
                 Notiflix.Notify.Info("有体检信息!");
@@ -56,7 +56,7 @@ function connectWebSocket(websocket) {
         }
         else if (type === "resume"){
             if (typeof (receiveResume) === "function"){
-                receiveResume(message);
+                receiveResume(obj["message"]);
             }
             else {
                 Notiflix.Notify.Info("有健康履历信息!");
@@ -64,7 +64,7 @@ function connectWebSocket(websocket) {
         }
         else if (type === "visit"){
             if (typeof (receiveVisit) === "function"){
-                receiveVisit(message);
+                receiveVisit(obj["message"]);
             }
             else {
                 Notiflix.Notify.Info("有家访信息!");
@@ -72,18 +72,17 @@ function connectWebSocket(websocket) {
         }
         else if (type === "data"){
             if (typeof (monitorCharts) === "function"){
-                monitorCharts(message);
+                monitorCharts(obj["message"]);
             }
         }
         else if (type === "other"){
             if (typeof (setOtherCharts) === "function"){
-                setOtherCharts(message);
+                setOtherCharts(obj["message"]);
             }
         }
         else{
             if (typeof (videoMsgDeal) === "function"){
-                // console.log(message);
-                videoMsgDeal(message).then(r => console.log());
+                videoMsgDeal(obj["message"]).then(r => console.log());
             }
         }
     }
