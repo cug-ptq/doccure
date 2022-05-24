@@ -166,7 +166,7 @@
 										<img th:src="${doctorInfo.getImage_url()}" class="img-fluid" alt="User Image">
 									</div>
 									<div class="doc-info-cont">
-										<h4 class="doc-name" th:text="${doctorInfo.username}"></h4>
+										<h4 class="doc-name" th:text="${doctorInfo.getUsername()}"></h4>
 										<p class="doc-speciality" th:text="${edu}"></p>
 										<p class="doc-department"><img th:src="${doctorInfo.getImage_url()}" class="img-fluid" alt="Speciality">Dentist</p>
 										<div class="rating">
@@ -179,16 +179,16 @@
 										</div>
 										<div class="clinic-details">
 											<!-- 地址 -->
-											<p class="doc-location" th:text="${doctorInfo.address}"><i class="fas fa-map-marker-alt"></i></p>
+											<p class="doc-location" th:text="${doctorInfo.getAddress()}"><i class="fas fa-map-marker-alt"></i></p>
 										</div>
 										<div class="clinic-services">
-											<span th:text="${doctorInfo.services}"></span>
+											<span th:text="${doctorInfo.getServices()}"></span>
 										</div>
 									</div>
 								</div>
 								<div class="doc-info-right">
 									<div class="clinic-booking">
-										<a class="apt-btn" th:href="@{/booking(email=${doctorInfo.email})}">Book Appointment</a>
+										<a class="apt-btn" th:href="@{/booking(email=${doctorInfo.getEmail()})}">Book Appointment</a>
 									</div>
 								</div>
 							</div>
@@ -224,7 +224,7 @@
 											<!-- About Details -->
 											<div class="widget about-widget">
 												<h4 class="widget-title">About Me</h4>
-												<p th:text="${doctorInfo.about_me}"></p>
+												<p th:text="${doctorInfo.getAbout_me()}"></p>
 											</div>
 											<!-- /About Details -->
 										

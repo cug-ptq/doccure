@@ -71,13 +71,13 @@ async function videoMsgDeal(message) {
             websocket.send(JSON.stringify({"type":"video","message":to_msg}));
             $('#call_start_div').modal("hide");
         } else if (parseInt(message.msg) === 0) {
+            $('#call_start_div').modal("hide");
             Notiflix.Notify.Info(toUserInfo.username + "拒绝视频通话");
             callEnd();
-            $('#call_start_div').modal("hide");
         } else {
+            $('#call_start_div').modal("hide");
             Notiflix.Notify.Info(message.msg);
             callEnd();
-            $('#call_start_div').modal("hide");
         }
         return;
     }
