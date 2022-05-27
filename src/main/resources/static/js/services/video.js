@@ -49,6 +49,7 @@ async function videoMsgDeal(message) {
     }
 
     if (message.type === 'call_back') { //发起方
+        $('#call_start_div').modal("hide");
         if (parseInt(message.msg) === 1) {
             //创建本地视频并发送offer
             console.log("我得到call_back")
@@ -69,13 +70,11 @@ async function videoMsgDeal(message) {
             let to_msg = JSON.stringify(newOffer);
             console.log("我发送offer");
             websocket.send(JSON.stringify({"type":"video","message":to_msg}));
-            $('#call_start_div').modal("hide");
+
         } else if (parseInt(message.msg) === 0) {
-            $('#call_start_div').modal("hide");
             Notiflix.Notify.Info(toUserInfo.username + "拒绝视频通话");
             callEnd();
         } else {
-            $('#call_start_div').modal("hide");
             Notiflix.Notify.Info(message.msg);
             callEnd();
         }
