@@ -9,7 +9,7 @@ import java.nio.file.Files;
 
 public class FileUtil {
     public static String getNewFileName(String originName){
-        return System.currentTimeMillis()
+        return originName.substring(0,originName.lastIndexOf("."))+System.currentTimeMillis()
                 + originName.substring(originName.lastIndexOf("."));
     }
 
