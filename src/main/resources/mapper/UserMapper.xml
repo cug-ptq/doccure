@@ -20,13 +20,22 @@
     <select id="getUserByEmail_Password" parameterType="String" resultType="com.example.doccure.entity.User">
         select * from user where email=#{email} and password=#{password}
     </select>
-    <update id="updatePassword" parameterType="String">
+    <update id="updatePasswordByEPNewP" parameterType="String">
         update user
         <set>
             <if test="new_password!=null">password=#{new_password},</if>
         </set>
         where email=#{email} and password=#{old_password}
     </update>
+
+    <update id="updatePasswordByEP" parameterType="String">
+        update user
+        <set>
+            <if test="new_password!=null">password=#{new_password},</if>
+        </set>
+        where email=#{email}
+    </update>
+
     <update id="updateEmail" parameterType="String">
         update user
         <set>

@@ -275,7 +275,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Msg changePassword(User user, String info){
         Msg data;
-        JsonNode jsonNode = null;
+        JsonNode jsonNode;
         try {
             jsonNode = objectMapper.readTree(info);
             String old_password = jsonNode.get("old_password").asText();
@@ -283,7 +283,7 @@ public class UserServiceImpl implements UserService {
             String confirm_password = jsonNode.get("confirm_password").asText();
             data = ServiceUtil.changePasswordMsg(user,old_password,new_password,confirm_password);
             if (data.getCode()==1){
-                userDao.updatePassword(user.getEmail(),user.getPassword(),new_password);
+                userDao.updatePasswordByEPNewP(user.getEmail(),user.getPassword(),new_password);
             }
             return data;
         } catch (JsonProcessingException e) {
@@ -294,7 +294,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePassword(String email, String password, String new_password) {
-        userDao.updatePassword(email,password,new_password);
+        userDao.updatePasswordByEPNewP(email,password,new_password);
+    }
+
+    @Override
+    public void updatePassword(String email,String new_password) {
+        userDao.updatePasswordByEP(email,new_password);
     }
 
     @Override

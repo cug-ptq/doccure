@@ -22,7 +22,8 @@ public interface UserService {
 
     Msg changePassword(User user, String info);
 
-    void updatePassword(String old_email, String password, String new_password);
+    void updatePassword(String email, String password, String new_password);
+    void updatePassword(String email, String new_password);
     void updateUsername(String email, String password, String new_username);
     List<User> getAllDoctorByRole();
     List<User> getAllPatientByRole();

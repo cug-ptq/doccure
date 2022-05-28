@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Constant {
+    public static String theme = "家庭医生管理系统";
     public static int doctorRole = 1;
     public static int patientRole = -1;
     public static int adminRole = 0;

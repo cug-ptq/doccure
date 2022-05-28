@@ -10,7 +10,13 @@ $("#submitChangePassword").click(function () {
         data:{"info":JSON.stringify({"old_password":old_password,"new_password":new_password,
             "confirm_password":confirm_password})},
         success:function (data) {
-            Notiflix.Notify.Failure(data.message);
+            console.log(data)
+            if (data.code===1){
+                Notiflix.Notify.Success(data.message);
+            }
+            else {
+                Notiflix.Notify.Failure(data.message);
+            }
         },
         error:function () {
             $("#messageChange").text("修改失败");

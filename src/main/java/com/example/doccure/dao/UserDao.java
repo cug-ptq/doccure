@@ -17,8 +17,8 @@ public interface UserDao {
 
     void registerUser(User user);
 
-    void updatePassword(String email,String old_password,String new_password);
-
+    void updatePasswordByEPNewP(String email,String old_password,String new_password);
+    void updatePasswordByEP(String email,String new_password);
     void updateUsername(String email, String password, String new_username);
 
     List<User> getAllDoctorByRole(int role);

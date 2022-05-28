@@ -16,8 +16,8 @@ public class DoccureWebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**");
         registration.excludePathPatterns("/login","/login/auth","/doctor-profile",
                 "/register","/doctor-register","/register/patient","/register/doctor","/query/registerResult",
-                "/blank-page","doctor-profile",
-                "/index","/doctors","/admin/login",
+                "/blank-page","doctor-profile","/getIdentityCode","/confirmIdentityCode","/modify-password",
+                "/index","/doctors","/admin/login","/identity-code","/forgot-password",
                 "/**/fonts/*.eot","/**/fonts/*.ttf","/**/fonts/*.woff","/**/fonts/*.woff2",
                 "/**/*.html",
                 "/**/js/*.js",

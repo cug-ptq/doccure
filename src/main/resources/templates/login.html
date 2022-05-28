@@ -137,7 +137,9 @@
 											<input type="password" class="form-control floating" id="password" name="password">
 											<label class="focus-label">Password</label>
 										</div>
-										<p class="text-center dont-have" id="messageLogin" style="color: #b21f2d"></p>
+										<div class="text-right">
+											<a class="forgot-link" th:href="@{/identity-code}">Forgot Password ?</a>
+										</div>
 										<button class="btn btn-primary btn-block btn-lg login-btn" id="submitLogin">Login</button>
 										<div class="text-center dont-have">Don’t have an account? <a th:href="@{/register}">Register</a></div>
 									</div>

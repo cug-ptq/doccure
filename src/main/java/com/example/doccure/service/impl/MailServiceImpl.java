@@ -1,6 +1,7 @@
 package com.example.doccure.service.impl;
 
 import com.example.doccure.service.MailService;
+import com.example.doccure.utils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -38,6 +39,7 @@ public class MailServiceImpl implements MailService {
         message.setText(content);
         try {
             mailSender.send(message);
+            return Msg.getMsgJsonCode(1,"请注意查收邮件");
         } catch (Exception e) {
             System.out.println("发送简单邮件时发生异常!");
         }
@@ -64,13 +66,14 @@ public class MailServiceImpl implements MailService {
                 helper.setSubject(subject);
                 helper.setText(content, true);
                 mailSender.send(message);
+                Msg.getMsgJsonCode(1,"请注意查收邮件");
             } catch (javax.mail.MessagingException e) {
                 e.printStackTrace();
             }
         } catch (MessagingException e) {
             System.out.println("发送MimeMessage时发生异常！");
         }
-        return "";
+        return Msg.getMsgJsonCode(-1,"发送失败");
     }
 
     /**
@@ -102,10 +105,11 @@ public class MailServiceImpl implements MailService {
                 e.printStackTrace();
             }
             mailSender.send(message);
+            Msg.getMsgJsonCode(1,"请注意查收邮件");
         } catch (MessagingException e) {
             System.out.println("发送带附件的MimeMessage时发生异常！");
         }
-        return "";
+        return Msg.getMsgJsonCode(-1,"发送失败");
     }
 
     /**
@@ -134,12 +138,13 @@ public class MailServiceImpl implements MailService {
                     helper.addInline(entry.getKey(), file);
                 }
                 mailSender.send(message);
+                Msg.getMsgJsonCode(1,"请注意查收邮件");
             } catch (javax.mail.MessagingException e) {
                 e.printStackTrace();
             }
         } catch (MessagingException e) {
             System.out.println("发送带静态文件的MimeMessage时发生异常！");
         }
-        return "";
+        return Msg.getMsgJsonCode(-1,"发送失败");
     }
 }

@@ -29,6 +29,10 @@ public class ServiceUtil {
     public static Msg changePasswordMsg(User user,String old_password,
                                      String new_password,String confirm_password){
         Msg data = new Msg();
+        if (old_password.length()==0 || new_password.length() == 0){
+            data.setCode(-1);data.setMessage("请输入旧密码或新密码");
+            return data;
+        }
         if (old_password.equals(user.getPassword())) {
             if (new_password.equals(confirm_password)){
                 data.setCode(1);data.setMessage("修改成功");
@@ -39,6 +43,21 @@ public class ServiceUtil {
         }
         else {
             data.setCode(-1);data.setMessage("原密码错误");
+        }
+        return data;
+    }
+
+    public static Msg changePasswordMsg(String new_password,String confirm_password){
+        Msg data = new Msg();
+        if (new_password.length()==0){
+            data.setCode(-1);data.setMessage("请输入新密码");
+            return data;
+        }
+        if (new_password.equals(confirm_password)){
+            data.setCode(1);data.setMessage("修改成功");
+        }
+        else {
+            data.setCode(-1);data.setMessage("密码确认错误");
         }
         return data;
     }
