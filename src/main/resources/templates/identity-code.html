@@ -296,7 +296,7 @@
 					dataType:"json",
 					data:{"code":code},
 					success:function (data) {
-						if (data.code){
+						if (data.code===1){
 							window.location.href = "forgot-password";
 						}
 						else {
