@@ -12,12 +12,11 @@ import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ServiceUtil {
+
+
     /**
      * 修改密码 判断填是否正确
      * @param user 病人
@@ -241,5 +240,15 @@ public class ServiceUtil {
     public static String[] nowArrayDateTime(){
         String nowDateTime = String.valueOf(LocalDateTime.now()); //appointment信息渲染
         return nowDateTime.split("T");
+    }
+
+    public static String setIdentityCode(){
+        StringBuilder sRand = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            String rand = String.valueOf(random.nextInt(10));
+            sRand.append(rand);
+        }
+        return String.valueOf(sRand);
     }
 }

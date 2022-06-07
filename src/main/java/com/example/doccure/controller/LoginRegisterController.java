@@ -1,14 +1,11 @@
 package com.example.doccure.controller;
 
 import com.example.doccure.entity.User;
-import com.example.doccure.service.DoctorInfoService;
-import com.example.doccure.service.MailService;
-import com.example.doccure.service.PatientInfoService;
+import com.example.doccure.service.IdentityCodeService;
 import com.example.doccure.utils.Constant;
 import com.example.doccure.utils.Msg;
 import com.example.doccure.service.UserService;
 import com.example.doccure.utils.ServiceUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,12 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Random;
 
 @Controller
 public class LoginRegisterController {
     @Autowired
-    private MailService mailService;
+    private IdentityCodeService identityCodeService;
     @Autowired
     private UserService userService;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -93,31 +89,16 @@ public class LoginRegisterController {
 
     @RequestMapping("/getIdentityCode")
     @ResponseBody
-    public String getIdentityCode(String email,String telephone, HttpServletRequest request){
+    public String getIdentityCode(String email, HttpServletRequest request){
         String content = "您的验证码: ";
+        String code = ServiceUtil.setIdentityCode();
+        request.getSession().setAttribute("code",code);
         if (email.length() != 0){
-            String code = setIdentityCode();
-            request.getSession().setAttribute("code",code);
-            return mailService.sendSimpleMailMessage(email, Constant.theme, content + code + "。请在5分钟内使用");
-        }
-        else if (telephone.length() != 0){
-            String code = setIdentityCode();
-            request.getSession().setAttribute("code",code);
-            return Msg.getMsgJsonCode(1,"请注意查收短信");
+            return identityCodeService.sendSimpleMailMessage(email, Constant.theme, content + code + "。请在5分钟内使用");
         }
         else {
             return Msg.getMsgJsonCode(-1,"请输入邮箱或者电话号码");
         }
-    }
-
-    public String setIdentityCode(){
-        StringBuilder sRand = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 5; i++) {
-            String rand = String.valueOf(random.nextInt(10));
-            sRand.append(rand);
-        }
-        return String.valueOf(sRand);
     }
 
 

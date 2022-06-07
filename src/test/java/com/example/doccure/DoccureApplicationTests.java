@@ -1,7 +1,6 @@
 package com.example.doccure;
 
-import com.example.doccure.controller.ChatWebSocket;
-import com.example.doccure.service.MailService;
+import com.example.doccure.service.IdentityCodeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class DoccureApplicationTests {
 
     @Autowired
-    private MailService mailService;
+    private IdentityCodeService identityCodeService;
 
     private static final String TO = "360385776@qq.com";
     private static final String SUBJECT = "主题 - 测试邮件";
@@ -18,7 +17,7 @@ class DoccureApplicationTests {
 
     @Test
     void contextLoads() {
-        mailService.sendSimpleMailMessage(TO, SUBJECT, CONTENT);
+        identityCodeService.sendSimpleMailMessage(TO, SUBJECT, CONTENT);
     }
 
 }

@@ -135,10 +135,10 @@
 											<input type="email" class="form-control floating" id="email">
 											<label class="focus-label">Email</label>
 										</div>
-										<div class="form-group form-focus">
-											<input type="number" class="form-control floating" id="telephone">
-											<label class="focus-label">Telephone</label>
-										</div>
+<!--										<div class="form-group form-focus">-->
+<!--											<input type="number" class="form-control floating" id="telephone">-->
+<!--											<label class="focus-label">Telephone</label>-->
+<!--										</div>-->
 										<div class="form-group form-focus">
 											<button id="getIdentityCode" class="btn btn-primary btn-block btn-lg login-btn">Get Identity Code</button>
 										</div>
@@ -271,13 +271,13 @@
 		<script th:inline="javaScript">
 			Notiflix.Notify.Init()
 			$("#getIdentityCode").click(function (){
-				let telephone = $("#telephone").val();
+				// let telephone = $("#telephone").val();
 				let email = $("#email").val()
 				$.ajax({
 					url: "/getIdentityCode",
 					type: "post",
 					dataType: "json",
-					data: {"telephone":telephone,"email":email},
+					data: {"email":email},
 					success: function (data){
 						if (data.code){
 							Notiflix.Notify.Info(data.message);
