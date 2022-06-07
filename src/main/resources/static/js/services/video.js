@@ -64,7 +64,8 @@ async function videoMsgDeal(message) {
             let offer = await peer.createOffer(options);
             await peer.setLocalDescription(offer);
 
-            let newOffer = offer.toJSON();
+            // let newOffer = offer.toJSON();
+            let newOffer = JSON.parse(offer);
             newOffer["fromUser"] = UserInfo.email;
             newOffer["toUser"] = toUserEmail;
             let to_msg = JSON.stringify(newOffer);
@@ -95,7 +96,8 @@ async function videoMsgDeal(message) {
 
 
         let answer = await peer.createAnswer(options);
-        let newAnswer = answer.toJSON();
+        // let newAnswer = answer.toJSON();
+        let newAnswer = JSON.parse(answer);
         newAnswer["fromUser"] = UserInfo.email;
         newAnswer["toUser"] = toUserEmail;
 
