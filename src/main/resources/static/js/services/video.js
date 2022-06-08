@@ -64,8 +64,7 @@ async function videoMsgDeal(message) {
             let offer = await peer.createOffer(options);
             await peer.setLocalDescription(offer);
 
-            // let newOffer = offer.toJSON();
-            let newOffer = JSON.parse(offer);
+            let newOffer = offer.toJSON();
             newOffer["fromUser"] = UserInfo.email;
             newOffer["toUser"] = toUserEmail;
             let to_msg = JSON.stringify(newOffer);
@@ -96,8 +95,7 @@ async function videoMsgDeal(message) {
 
 
         let answer = await peer.createAnswer(options);
-        // let newAnswer = answer.toJSON();
-        let newAnswer = JSON.parse(answer);
+        let newAnswer = answer.toJSON();
         newAnswer["fromUser"] = UserInfo.email;
         newAnswer["toUser"] = toUserEmail;
 
@@ -225,22 +223,3 @@ function callEnd() {
     localVideo.srcObject = null;
     remoteVideo.srcObject = null;
 }
-
-// setInterval(function () {
-//     if (remoteVideo.srcObject!=null){
-//         seconds++;
-//         dealSeconds(seconds);
-//     }
-//
-//     }, 1000);
-// function dealSeconds(seconds){
-//     //总秒数
-//     //seconds=seconds/1000;
-//     //得到小时
-//     let hour = (seconds/3600);
-//     if (hour.toString().length === 1){ hour = "0" + hour.toString();}
-//     let r = seconds%3600;
-//     let m = r/60; if (m.toString().length === 1){ m = "0" + m.toString();}
-//     let s = r%60; if (s.toString().length === 1){ s = "0" + s.toString();}
-//     $("#time").text(hour +":"+ m +":"+ s);
-// }
