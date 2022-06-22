@@ -1,10 +1,8 @@
 package com.example.doccure.service.impl;
 
 import com.example.doccure.controller.ChatWebSocket;
-import com.example.doccure.controller.DataServiceController;
 import com.example.doccure.entity.HealthData;
 import com.example.doccure.service.PatientInfoService;
-import com.example.doccure.service.UserService;
 import com.example.doccure.utils.ApplicationContextFactory;
 import com.example.doccure.utils.Constant;
 import com.example.doccure.utils.Msg;

@@ -3,7 +3,6 @@ package com.example.doccure.service;
 import com.example.doccure.entity.Appointment;
 import com.example.doccure.entity.User;
 import com.example.doccure.utils.Msg;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
