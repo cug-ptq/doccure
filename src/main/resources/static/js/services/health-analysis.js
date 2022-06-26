@@ -483,5 +483,5 @@ function setOtherCharts(data) {
         appointTypeNum[i] = JSON.parse(appointTypeNum[i]);
     }
     appointTypeNumChart.setOption(getAppointPieChart(appointTypeNum));
-    specialityChart.setOption(getBarSpeciality(data.specialties,data.specialityNum));
+    specialtyChart.setOption(getBarSpeciality(data.specialties,data.specialityNum));
 }
