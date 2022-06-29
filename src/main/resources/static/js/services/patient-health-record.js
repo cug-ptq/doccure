@@ -568,6 +568,9 @@ function showDetailExam(obj) {
     $(exam_image).text("图片文件链接");
     $(exam_otherFile).attr("href",examInfosIdMap[id].file_url);
     $(exam_otherFile).text("其他文件链接");
+    let begin = examInfosIdMap[id].file_url.lastIndexOf("/");
+    let length = examInfosIdMap[id].file_url.length;
+    $(exam_otherFile).attr("download",examInfosIdMap[id].file_url.substr(begin,length));
     editorExam.txt.html(examInfosIdMap[id].description);
     editorExam.disable();
 }
@@ -690,6 +693,12 @@ function editExam(obj) {
     $(exam_image).text("图片文件链接");
     $(exam_otherFile).attr("href",examInfosIdMap[id].file_url);
     $(exam_otherFile).text("其他文件链接");
+    let begin = examInfosIdMap[id].file_url.lastIndexOf("/");
+    console.log(begin);
+    let length = examInfosIdMap[id].file_url.length;
+    console.log(length);
+    console.log(examInfosIdMap[id].file_url.substr(begin,length));
+    $(exam_otherFile).attr("download",examInfosIdMap[id].file_url.substr(begin,length));
     editorExam.txt.html(examInfosIdMap[id].description);
     editorExam.enable();
 }

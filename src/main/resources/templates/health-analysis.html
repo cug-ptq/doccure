@@ -543,9 +543,8 @@
     let internal = 5;
     let historyChart = echarts.init(document.querySelector("#historyChart"));
     let monitorChart = echarts.init(document.querySelector("#monitorChart"));
-
-    let specialtyChart = echarts.init(document.querySelector("#specialtyChart"));
     let appointTypeNumChart = echarts.init(document.querySelector("#appointTypeNumChart"));
+    var specialtyChart = echarts.init(document.querySelector("#specialtyChart"));
 
     historyChart.setOption(getSingleOptionChart());
     monitorChart.setOption(getSingleOptionChart());
@@ -577,39 +576,6 @@
            }
        });
     }
-    // window.onresize = function () {
-    //     chartReSize();
-    // }
-
-    // function chartReSize(){
-    //     let cardBodyH = $("#cardBodyH");
-    //     let cardBodyM = $("#cardBodyM");
-    //     let cardBodyA = $("#cardBodyA");
-    //     let cardBodyS = $("#cardBodyS");
-    //     let _historyChart = $("#historyChart");
-    //     let _monitorChart = $("#monitorChart");
-    //     let _appointTypeNumChart = $("#appointTypeNumChart");
-    //     let _specialtyChart = $("#specialtyChart");
-    //     let width = cardBodyH.width();
-    //     historyChart.resize({width:width, height:500});
-    //     historyChart.resize();
-    //     _historyChart.height(500).width(width);
-    //
-    //     width = cardBodyM.width();
-    //     monitorChart.resize({width:width, height:500});
-    //     monitorChart.resize();
-    //     _monitorChart.height(500).width(width);
-    //
-    //     width = cardBodyA.width();
-    //     appointTypeNumChart.resize({width:width, height:350});
-    //     appointTypeNumChart.resize();
-    //     _appointTypeNumChart.height(350).width(width);
-    //
-    //     width = cardBodyS.width();
-    //     specialtyChart.resize({width:width, height:350});
-    //     specialtyChart.resize();
-    //     _specialtyChart.height(350).width(width);
-    // }
 </script>
 
 </body>
